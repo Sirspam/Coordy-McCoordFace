@@ -1,4 +1,4 @@
-# https://discord.com/api/oauth2/authorize?bot_id=813699805150838795&permissions=29371392&scope=bot
+# https://discord.com/api/oauth2/authorize?client_id=813699805150838795&permissions=29371392&scope=bot
 
 import discord
 import os
