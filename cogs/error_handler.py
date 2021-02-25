@@ -4,8 +4,8 @@ from discord.ext import commands
 
 
 class error_handler(commands.Cog):
-    def __init__(self, client):
-        self.client = client
+    def __init__(self, bot):
+        self.bot = bot
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
@@ -41,5 +41,5 @@ class error_handler(commands.Cog):
         logging.error(f"{error}\n----------")
 
 
-def setup(client):
-    client.add_cog(error_handler(client))
+def setup(bot):
+    bot.add_cog(error_handler(bot))

@@ -8,21 +8,17 @@ ignored_roles = []
 
 
 class coord(commands.Cog):
-    def __init__(self, client):
-        self.client = client
+    def __init__(self, bot):
+        self.bot = bot
 
-    @commands.group(invoke_without_command=True, case_insensitive=True, aliases=["coord","c"])
-    @commands.has_role(coord_role_id)
-    async def coordinator(self, ctx):
-        await ctx.send("Hi coordinator-kun ^w^")
 
-    @coordinator.command(aliases=["m"])
+    @commands.command(case_insensitive=True, aliases=["m"], help="Mutes users in your vc. alias = m")
     @commands.has_role(coord_role_id)
     async def mute(self, ctx):
         logging.info("coord mute ran")
         if ctx.author.voice is None:
             return await ctx.send("You aren't in a voice channel!")
-        voice = self.client.get_channel(ctx.author.voice.channel.id)
+        voice = self.bot.get_channel(ctx.author.voice.channel.id)
         logging.info(f"muting in {voice.name}")
         for x in voice.members:
             if x.id == ctx.author.id:
@@ -38,13 +34,13 @@ class coord(commands.Cog):
         await ctx.message.delete()
         logging.info("Finished muting\n-------------")
 
-    @coordinator.command(aliases=["um"])
+    @commands.command(case_insensitive=True, aliases=["um"], help="Unmutes users in your vc. alias = um")
     @commands.has_role(coord_role_id)
     async def unmute(self, ctx):
         logging.info("coord unmute ran")
         if ctx.author.voice is None:
             return await ctx.send("You aren't in a voice channel!")
-        voice = self.client.get_channel(ctx.author.voice.channel.id)
+        voice = self.bot.get_channel(ctx.author.voice.channel.id)
         logging.info(f"unmuting in {voice.name}")
         for x in voice.members:
             await ctx.guild.get_member(x.id).edit(mute=False, deafen=False)
@@ -52,13 +48,13 @@ class coord(commands.Cog):
         await ctx.message.delete()
         logging.info("Finished unmuting\n-------------")
     
-    @coordinator.command(aliases=["mout"])
+    @commands.command(case_insensitive=True, aliases=["mout"], help="Moves users to the lobby vc. alias = um")
     @commands.has_role(coord_role_id)
     async def move_out(self, ctx):
         logging.info("coord move_in ran")
         if ctx.author.voice is None:
             return await ctx.send("You aren't in a voice channel!")
-        voice = self.client.get_channel(ctx.author.voice.channel.id)
+        voice = self.bot.get_channel(ctx.author.voice.channel.id)
         logging.info(f"Moving players in {voice.name}")
         for x in voice.members:
             if x.id == ctx.author.id:
@@ -67,12 +63,12 @@ class coord(commands.Cog):
             for x in ignored_roles:
                 if x in str(member.roles):
                     continue
-            await member.move_to(self.client.get_channel(lobby_vc_id))
+            await member.move_to(self.bot.get_channel(lobby_vc_id))
             logging.info(f"{x.name} moved")
         await ctx.message.delete()
         logging.info("Finished moving\n-------------")
 
-    @coordinator.command(aliases=["moin"])
+    @commands.command(case_insensitive=True, aliases=["moin"], help="Moves mentioned users to your vc. alias = moin")
     @commands.has_role(coord_role_id)
     async def move_in(self, ctx, *, argument):
         logging.info("coord move_in ran")
@@ -90,11 +86,11 @@ class coord(commands.Cog):
                 continue
             logging.info(victim)
             try:
-                await victim.move_to(self.client.get_channel(ctx.author.voice.channel.id))
+                await victim.move_to(self.bot.get_channel(ctx.author.voice.channel.id))
             except Exception as e:
-                logging.info(f"moving of {victim.name} failed: {e}")
+                logging.error(f"moving of {victim.name} failed: {e}")
         await ctx.message.delete()
         logging.info("Finished moving\n-------------")
 
-def setup(client):
-    client.add_cog(coord(client))
+def setup(bot):
+    bot.add_cog(coord(bot))
