@@ -1,5 +1,3 @@
-# https://discord.com/api/oauth2/authorize?client_id=813699805150838795&permissions=29371392&scope=bot
-
 import discord
 import os
 import logging
@@ -17,7 +15,8 @@ logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.INFO)
 initial_cogs = [
     "jishaku",
     "cogs.error_handler",
-    "cogs.coord"
+    "cogs.coord",
+    "cogs.text"
 ]
 
 for cog in initial_cogs:
