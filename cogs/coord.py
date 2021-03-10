@@ -36,7 +36,7 @@ class coord(commands.Cog):
         logging.info("Finished muting\n-------------")
 
     @commands.command(case_insensitive=True, aliases=["um"], help="Unmutes users in your vc. alias = um")
-    @commands.has_role(*coord_roles_ids)
+    @commands.has_any_role(*coord_roles_ids)
     async def unmute(self, ctx):
         logging.info("coord unmute ran")
         if ctx.author.voice is None:
@@ -52,7 +52,7 @@ class coord(commands.Cog):
         logging.info("Finished unmuting\n-------------")
     
     @commands.command(case_insensitive=True, aliases=["mout"], help="Moves users to the lobby vc. alias = mout")
-    @commands.has_role(*coord_roles_ids)
+    @commands.has_any_role(*coord_roles_ids)
     async def move_out(self, ctx):
         logging.info("coord move_in ran")
         if ctx.author.voice is None:
@@ -75,7 +75,7 @@ class coord(commands.Cog):
         logging.info("Finished moving\n-------------")
 
     @commands.command(case_insensitive=True, aliases=["min"], help="Moves mentioned users to your vc. alias = min")
-    @commands.has_role(*coord_roles_ids)
+    @commands.has_any_role(*coord_roles_ids)
     async def move_in(self, ctx, *, argument):
         logging.info("coord move_in ran")
         victims = argument.split() # I thought "victims" was a funny variable name for the users being moved :)
