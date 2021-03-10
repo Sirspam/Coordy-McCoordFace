@@ -8,6 +8,7 @@ from utils import jskp
 cwd = os.getcwd()
 load_dotenv(f"{cwd}/config.env")
 intents = discord.Intents.default()
+intents.members = True
 bot = commands.Bot(command_prefix="!c ",intents=intents,case_insensitive=True)
 logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.INFO)
 
