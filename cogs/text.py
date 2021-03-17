@@ -25,12 +25,12 @@ class text(commands.Cog):
         await ctx.guild.me.edit(nick=arg)
         logging.info(f"Nickname successfully changed to: {arg}")
 
-    @commands.command(case_insensitive=True, help="Makes the bot leave the server")
+    @commands.command(case_insensitive=True, help="Makes the bot leave the guild")
     @commands.has_permissions(administrator = True)
     async def leave(self, ctx):
         logging.info(f"Recieved leave in {ctx.guild.name} from {ctx.author.name}")
         await ctx.guild.leave()
-        logging.info(f"Successfully left the server")
+        logging.info(f"Successfully left the guild")
 
 def setup(bot):
     bot.add_cog(text(bot))
