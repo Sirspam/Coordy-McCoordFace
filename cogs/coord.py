@@ -2,9 +2,9 @@ import logging
 from discord.ext import commands
 
 # These variables need to be changed for whatever discord server the bot is being used in
-lobby_vc_id = int()
-coord_roles_ids = [] #int
-ignored_roles = [""] #str
+lobby_vc_id = int() # int - Must be voice channel ID
+coord_roles_ids = [] # int - Must be role ID
+ignored_roles = [""] # str - Can be either role name or role ID
 
 
 class coord(commands.Cog):
