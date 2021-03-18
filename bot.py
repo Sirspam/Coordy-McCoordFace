@@ -27,7 +27,7 @@ for cog in initial_cogs:
     except Exception as e:
         logging.error(f"Failed to load cog {cog}: {e}")
 
-
+@bot.event
 async def on_ready():
     logging.info('Bot has successfully launched as {0.user}'.format(bot))
 
