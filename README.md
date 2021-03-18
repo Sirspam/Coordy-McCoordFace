@@ -8,11 +8,11 @@
 
 ### Coordination commands
 All of the commands below require the role specified in the coord_roles_ids list. Furthermore, individuals with a role specified in the ignored_roles list will not be effected when these commands are ran, the command author will also be excempt.
-| Command | Description |
-| --- | --- |
-| mute | Mutes and deafens all users in the author's vc |
-| unmute | Unmutes and undeafens all users in the author's vc |
-| move_out | Moves all users into the vc specified in the lobby_vc_id variable |
-| move_in <mentions> | Moves all users mentioned into the author's vc |
+| Command | Alias | Description |
+| --- | --- | --- |
+| mute | m | Mutes and deafens all users in the author's vc |
+| unmute | um | Unmutes and undeafens all users in the author's vc |
+| move_out | mout | Moves all users into the vc specified in the lobby_vc_id variable |
+| move_in <mentions> | min | Moves all users mentioned into the author's vc |
 
 
