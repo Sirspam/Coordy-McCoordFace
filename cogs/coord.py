@@ -4,7 +4,7 @@ from discord.ext import commands
 # These variables need to be changed for whatever discord server the bot is being used in
 lobby_vc_id = int() # int - Must be voice channel ID
 coord_roles_ids = [] # int - Must be role ID
-ignored_roles = [""] # str - Can be either role name or role ID
+ignored_roles = [] # str - Can be either role name or role ID
 
 
 class coord(commands.Cog):
@@ -24,14 +24,18 @@ class coord(commands.Cog):
             if x.id == ctx.author.id:
                 continue
             member = ctx.guild.get_member(x.id)
-            for xd in ignored_roles:
-                logging.info(f"checking for ignored role: {xd}")
-                if xd in str(member.roles):
-                    logging.info(f"{x.name} ignored")
-                    continue
-                else:
-                    await member.edit(mute=True, deafen=True)
-                    logging.info(f"{x.name} muted")
+            if ignored_roles:
+                for xd in ignored_roles:
+                    logging.info(f"checking for ignored role: {xd}")
+                    if xd in str(member.roles):
+                        logging.info(f"{x.name} ignored")
+                        continue
+                    else:
+                        await member.edit(mute=True, deafen=True)
+                        logging.info(f"{x.name} muted")
+            else:
+                await member.edit(mute=True, deafen=True)
+                logging.info(f"{x.name} muted")
         await ctx.message.delete()
         logging.info("Finished muting\n-------------")
 
@@ -63,14 +67,18 @@ class coord(commands.Cog):
             if x.id == ctx.author.id:
                 continue
             member = ctx.guild.get_member(x.id)
-            for xd in ignored_roles:
-                logging.info(f"checking for ignored role: {xd}")
-                if xd in str(member.roles):
-                    logging.info(f"{x.name} ignored")
-                    continue
-                else:
-                    await member.move_to(self.bot.get_channel(lobby_vc_id))
-                    logging.info(f"{x.name} moved")
+            if ignored_roles:
+                for xd in ignored_roles:
+                    logging.info(f"checking for ignored role: {xd}")
+                    if xd in str(member.roles):
+                        logging.info(f"{x.name} ignored")
+                        continue
+                    else:
+                        await member.move_to(self.bot.get_channel(lobby_vc_id))
+                        logging.info(f"{x.name} moved")
+            else:
+                await member.move_to(self.bot.get_channel(lobby_vc_id))
+                logging.info(f"{x.name} moved")
         await ctx.message.delete()
         logging.info("Finished moving\n-------------")
 

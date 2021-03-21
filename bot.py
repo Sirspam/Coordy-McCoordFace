@@ -9,7 +9,9 @@ cwd = os.getcwd()
 load_dotenv(f"{cwd}/config.env")
 intents = discord.Intents.default()
 intents.members = True
-bot = commands.Bot(command_prefix="!c ",intents=intents,case_insensitive=True)
+cache_flags = discord.MemberCacheFlags.none()
+cache_flags.voice = True
+bot = commands.Bot(command_prefix="!c ", member_cache_flags=cache_flags, max_messages = None, intents=intents, case_insensitive=True)
 logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.INFO)
 
 
