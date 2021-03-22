@@ -5,8 +5,7 @@ from discord.ext import commands
 from dotenv import load_dotenv
 from utils import jskp
 
-cwd = os.getcwd()
-load_dotenv(f"{cwd}/config.env")
+load_dotenv(os.getcwd()+"/config.env")
 intents = discord.Intents.default()
 intents.members = True
 cache_flags = discord.MemberCacheFlags.none()
