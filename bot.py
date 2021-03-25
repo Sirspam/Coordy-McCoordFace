@@ -8,9 +8,7 @@ from utils import jskp
 load_dotenv(os.getcwd()+"/config.env")
 intents = discord.Intents.default()
 intents.members = True
-cache_flags = discord.MemberCacheFlags.none()
-cache_flags.voice = True
-bot = commands.Bot(command_prefix="!c ", member_cache_flags=cache_flags, max_messages = None, intents=intents, case_insensitive=True)
+bot = commands.Bot(command_prefix="!c ", max_messages = None, intents=intents, case_insensitive=True)
 logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.INFO)
 
 
