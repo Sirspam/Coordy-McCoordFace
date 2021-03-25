@@ -22,7 +22,10 @@ class text(commands.Cog):
     @commands.has_permissions(administrator = True)
     async def nickname(self, ctx, *, arg):
         logging.info(f"Recieved nickname in {ctx.guild.name} from {ctx.author.name}")
-        await ctx.guild.me.edit(nick=arg)
+        if arg == "None":
+            await ctx.guild.me.edit(nick=None)
+        else:
+            await ctx.guild.me.edit(nick=arg)
         logging.info(f"Nickname successfully changed to: {arg}")
 
     @commands.command(case_insensitive=True, help="Makes the bot leave the guild")
