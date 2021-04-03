@@ -1,10 +1,11 @@
 import logging
+import os
 from discord.ext import commands
 
 # These variables need to be changed for whatever discord server the bot is being used in
-lobby_vc_id = int() # int - Must be voice channel ID
-coord_roles_ids = [] # int - Must be role ID
-ignored_roles = [] # str - Can be either role name or role ID
+lobby_vc_id = (os.getenv("LOBBY_VC_ID")) # int - Must be voice channel ID
+coord_roles_ids = [os.getenv("COORD_ROLES_IDS")] # int - Must be role ID
+ignored_roles = [os.getenv("IGNORED_ROLES")] # str - Can be either role name or role ID
 
 
 class coord(commands.Cog):
