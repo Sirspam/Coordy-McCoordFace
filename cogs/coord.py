@@ -1,14 +1,18 @@
 import logging
-import os
+import json
 from discord.ext import commands
 
+
+roles_config = json.load(open("roles_config.json",))
+
+
 # These variables need to be changed for whatever discord server the bot is being used in
-lobby_vc_id = int(os.getenv("LOBBY_VC_ID")) # int - Must be voice channel ID
-coord_roles_ids = [int(os.getenv("COORD_ROLES_IDS"))] # int - Must be role ID
-ignored_roles = [str(os.getenv("IGNORED_ROLES"))] # str - Can be either role name or role ID
+lobby_vc_id = roles_config["lobby_vc_id"] # int - Must be voice channel ID
+coord_roles_ids = roles_config["coord_roles_ids"] # int - Must be role ID
+ignored_roles = roles_config["ignored_roles"] # str - Can be either role name or role ID
 
 
-class coord(commands.Cog):
+class Coord(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -56,7 +60,7 @@ class coord(commands.Cog):
         await ctx.message.delete()
         logging.info("Finished unmuting\n-------------")
     
-    @commands.command(case_insensitive=True, aliases=["mout"], help="Moves users to the lobby vc. alias = mout")
+    @commands.command(case_insensitive=True, aliases=["out"], help="Moves users to the lobby vc. alias = mout")
     @commands.has_any_role(*coord_roles_ids)
     async def move_out(self, ctx):
         logging.info("coord move_in ran")
@@ -83,7 +87,7 @@ class coord(commands.Cog):
         await ctx.message.delete()
         logging.info("Finished moving\n-------------")
 
-    @commands.command(case_insensitive=True, aliases=["min"], help="Moves mentioned users to your vc. alias = min")
+    @commands.command(case_insensitive=True, aliases=["in"], help="Moves mentioned users to your vc. alias = min")
     @commands.has_any_role(*coord_roles_ids)
     async def move_in(self, ctx, *, argument):
         logging.info("coord move_in ran")
@@ -108,4 +112,4 @@ class coord(commands.Cog):
         logging.info("Finished moving\n-------------")
 
 def setup(bot):
-    bot.add_cog(coord(bot))
+    bot.add_cog(Coord(bot))

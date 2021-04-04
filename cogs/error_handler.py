@@ -3,7 +3,7 @@ import logging
 from discord.ext import commands
 
 
-class error_handler(commands.Cog):
+class ErrorHandler(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -42,4 +42,4 @@ class error_handler(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(error_handler(bot))
+    bot.add_cog(ErrorHandler(bot))

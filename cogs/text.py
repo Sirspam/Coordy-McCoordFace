@@ -3,7 +3,7 @@ import logging
 from discord.ext import commands
 
 
-class text(commands.Cog):
+class Text(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -36,4 +36,4 @@ class text(commands.Cog):
         logging.info(f"Successfully left the guild")
 
 def setup(bot):
-    bot.add_cog(text(bot))
+    bot.add_cog(Text(bot))
