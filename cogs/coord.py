@@ -12,6 +12,7 @@ coord_roles_ids = roles_config["coord_roles_ids"] # int - Must be role ID
 ignored_roles = roles_config["ignored_roles"] # str - Can be either role name or role ID
 
 
+
 class Coord(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -92,18 +93,8 @@ class Coord(commands.Cog):
     async def move_in(self, ctx, *, argument):
         logging.info("coord move_in ran")
         victims = argument.split() # I thought "victims" was a funny variable name for the users being moved :)
-        logging.info(victims)
         for x in victims:
-            if x.isdigit():
-                victim = ctx.guild.get_member(int(x))
-            else:
-                ID = x[3:]
-                ID = ID[:-1]
-            victim = ctx.guild.get_member(int(ID))
-            if victim is None:
-                logging.info("victim is None, continuing")
-                continue
-            logging.info(victim)
+            victim = await commands.MemberConverter().convert(ctx, x)
             try:
                 await victim.move_to(self.bot.get_channel(ctx.author.voice.channel.id))
             except Exception as e:
