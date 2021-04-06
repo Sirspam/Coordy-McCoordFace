@@ -2,12 +2,12 @@
 ### General commands
 | Command | Description |
 | --- | --- |
-| links | Post an embed containing relevent links for the bot. |
-| nickname | Changes the bot's nickname to the provided argument. Requires admin privilages. |
-| leave | Makes the bot leave the guild. Requires admin privilages. |
+| links | Post an embed containing relevant links for the bot. |
+| nickname | Changes the bot's nickname to the provided argument. Requires admin privileges. |
+| leave | Makes the bot leave the guild. Requires admin privileges. |
 
 ### Coordination commands
-All of the commands below require the role specified in the coord_roles_ids list. Furthermore, individuals with a role specified in the ignored_roles list will not be effected when these commands are ran, the command author will also be excempt.
+All of the commands below require the role specified in the coord_roles_ids list. Furthermore, individuals with a role specified in the ignored_roles list will not be affected when these commands are ran, the command author will also be exempt.
 | Command | Alias | Description |
 | --- | --- | --- |
 | mute | m | Mutes and deafens all users in the author's vc |
