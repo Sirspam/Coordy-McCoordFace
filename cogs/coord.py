@@ -20,21 +20,21 @@ class Coord(commands.Cog):
         self.bot = bot
 
 
-    @commands.command(case_insensitive=True, aliases=["m"], help="Mutes users in your vc. alias = m")
+    @commands.command(aliases=["m"], help="Mutes users in your vc.")
     @commands.has_any_role(*coord_roles_ids)
     async def mute(self, ctx):
-        logging.info("coord mute ran")
+        logging.info("mute ran")
         if ctx.author.voice is None:
             return await ctx.send("You aren't in a voice channel!")
         voice = self.bot.get_channel(ctx.author.voice.channel.id)
-        logging.info(f"muting in {voice.name}")
+        logging.info(f"Muting in {voice.name}")
         for x in voice.members:
             if x.id == ctx.author.id:
                 continue
             member = ctx.guild.get_member(x.id)
             if ignored_roles:
                 for xd in ignored_roles:
-                    logging.info(f"checking for ignored role: {xd}")
+                    logging.info(f"Checking for ignored role: {xd}")
                     if xd in str(member.roles):
                         logging.info(f"{x.name} ignored")
                         continue
@@ -47,14 +47,14 @@ class Coord(commands.Cog):
         await ctx.message.delete()
         logging.info("Finished muting\n-------------")
 
-    @commands.command(case_insensitive=True, aliases=["um"], help="Unmutes users in your vc. alias = um")
+    @commands.command(aliases=["um"], help="Unmutes users in your vc.")
     @commands.has_any_role(*coord_roles_ids)
     async def unmute(self, ctx):
-        logging.info("coord unmute ran")
+        logging.info("Unmute ran")
         if ctx.author.voice is None:
             return await ctx.send("You aren't in a voice channel!")
         voice = self.bot.get_channel(ctx.author.voice.channel.id)
-        logging.info(f"unmuting in {voice.name}")
+        logging.info(f"Unmuting in {voice.name}")
         for x in voice.members:
             member = ctx.guild.get_member(x.id)
             if member.voice.mute is True:
@@ -63,10 +63,10 @@ class Coord(commands.Cog):
         await ctx.message.delete()
         logging.info("Finished unmuting\n-------------")
     
-    @commands.command(case_insensitive=True, aliases=["out"], help="Moves users to the lobby vc. alias = out")
+    @commands.command(aliases=["out"], help="Moves users to the lobby vc.")
     @commands.has_any_role(*coord_roles_ids)
     async def move_out(self, ctx):
-        logging.info("coord move_in ran")
+        logging.info("Move_in ran")
         if ctx.author.voice is None:
             return await ctx.send("You aren't in a voice channel!")
         voice = self.bot.get_channel(ctx.author.voice.channel.id)
@@ -77,7 +77,7 @@ class Coord(commands.Cog):
             member = ctx.guild.get_member(x.id)
             if ignored_roles:
                 for xd in ignored_roles:
-                    logging.info(f"checking for ignored role: {xd}")
+                    logging.info(f"Checking for ignored role: {xd}")
                     if xd in str(member.roles):
                         logging.info(f"{x.name} ignored")
                         continue
@@ -90,10 +90,10 @@ class Coord(commands.Cog):
         await ctx.message.delete()
         logging.info("Finished moving\n-------------")
 
-    @commands.command(case_insensitive=True, aliases=["in"], help="Moves mentioned users to your vc. alias = in")
+    @commands.command(aliases=["in"], help="Moves mentioned users to your vc.")
     @commands.has_any_role(*coord_roles_ids)
     async def move_in(self, ctx, *, argument):
-        logging.info("coord move_in ran")
+        logging.info("Move_in ran")
         victims = argument.split() # I thought "victims" was a funny variable name for the users being moved :)
         for x in victims:
             victim = await commands.MemberConverter().convert(ctx, x)
@@ -107,17 +107,17 @@ class Coord(commands.Cog):
     @commands.command(help="Flips a coin")
     @commands.has_any_role(*coord_roles_ids)
     async def coin(self, ctx):
-        logging.info("coin ran")
+        logging.info("Coin ran")
         if getrandbits(1) == 1:
             await ctx.send("Heads")
         else:
             await ctx.send("Tails")
-        logging.info("coin ended\n-------------")
+        logging.info("Coin ended\n-------------")
 
     @commands.command(help="Picks a random user in your vc")
     @commands.has_any_role(*coord_roles_ids)
     async def pick(self, ctx):
-        logging.info("pick ran")
+        logging.info("Pick ran")
         if ctx.author.voice is None:
             return await ctx.send("You aren't in a voice channel!")
         voice = self.bot.get_channel(ctx.author.voice.channel.id)
@@ -129,7 +129,7 @@ class Coord(commands.Cog):
             member = ctx.guild.get_member(x.id)
             if ignored_roles:
                 for xd in ignored_roles:
-                    logging.info(f"checking for ignored role: {xd}")
+                    logging.info(f"Checking for ignored role: {xd}")
                     if xd in str(member.roles):
                         logging.info(f"{x.name} ignored")
                         continue
@@ -140,7 +140,7 @@ class Coord(commands.Cog):
                 valid_users.append(member.name)
                 logging.info(f"{x.name} valid")
         await ctx.send(choice(valid_users))
-        logging.info("pick finished\n-------------")
+        logging.info("Picking finished\n-------------")
 
 
 def setup(bot):
