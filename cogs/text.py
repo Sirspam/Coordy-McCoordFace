@@ -24,9 +24,10 @@ class Text(commands.Cog):
         logging.info(f"Recieved nickname in {ctx.guild.name} from {ctx.author.name}")
         if arg == "None":
             await ctx.guild.me.edit(nick=None)
+            return logging.info(f"Nickname successfully reverted to default")
         else:
             await ctx.guild.me.edit(nick=arg)
-        logging.info(f"Nickname successfully changed to: {arg}")
+            return logging.info(f"Nickname successfully changed to: {arg}")
 
     @commands.command(case_insensitive=True, help="Makes the bot leave the guild")
     @commands.has_permissions(administrator = True)

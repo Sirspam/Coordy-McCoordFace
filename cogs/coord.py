@@ -61,7 +61,7 @@ class Coord(commands.Cog):
         await ctx.message.delete()
         logging.info("Finished unmuting\n-------------")
     
-    @commands.command(case_insensitive=True, aliases=["out"], help="Moves users to the lobby vc. alias = mout")
+    @commands.command(case_insensitive=True, aliases=["out"], help="Moves users to the lobby vc. alias = out")
     @commands.has_any_role(*coord_roles_ids)
     async def move_out(self, ctx):
         logging.info("coord move_in ran")
@@ -88,7 +88,7 @@ class Coord(commands.Cog):
         await ctx.message.delete()
         logging.info("Finished moving\n-------------")
 
-    @commands.command(case_insensitive=True, aliases=["in"], help="Moves mentioned users to your vc. alias = min")
+    @commands.command(case_insensitive=True, aliases=["in"], help="Moves mentioned users to your vc. alias = in")
     @commands.has_any_role(*coord_roles_ids)
     async def move_in(self, ctx, *, argument):
         logging.info("coord move_in ran")
