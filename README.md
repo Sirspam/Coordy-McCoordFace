@@ -15,4 +15,4 @@ All of the commands below require the role specified in the coord_roles_ids list
 | move_out | out | Moves all users into the vc specified in the lobby_vc_id variable |
 | move_in \[mentions\] | in | Moves all users mentioned into the author's vc |
 | coin |  | Flips a coin |
-| pick |  | Picks a random person in your vc | 
+| pick |  | Picks a random person in the author's vc | 
