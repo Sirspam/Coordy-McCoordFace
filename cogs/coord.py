@@ -1,6 +1,8 @@
 import logging
 import json
 from discord.ext import commands
+from random import getrandbits
+from random import choice
 
 
 roles_config = json.load(open("roles_config.json",))
@@ -101,6 +103,45 @@ class Coord(commands.Cog):
                 logging.error(f"moving of {victim.name} failed: {e}")
         await ctx.message.delete()
         logging.info("Finished moving\n-------------")
+
+    @commands.command(help="Flips a coin")
+    @commands.has_any_role(*coord_roles_ids)
+    async def coin(self, ctx):
+        logging.info("coin ran")
+        if getrandbits(1) == 1:
+            await ctx.send("Heads")
+        else:
+            await ctx.send("Tails")
+        logging.info("coin ended\n-------------")
+
+    @commands.command(help="Picks a random user in your vc")
+    @commands.has_any_role(*coord_roles_ids)
+    async def pick(self, ctx):
+        logging.info("pick ran")
+        if ctx.author.voice is None:
+            return await ctx.send("You aren't in a voice channel!")
+        voice = self.bot.get_channel(ctx.author.voice.channel.id)
+        logging.info(f"Picking user in {voice.name}")
+        valid_users = []
+        for x in voice.members:
+            if x.id == ctx.author.id:
+                continue
+            member = ctx.guild.get_member(x.id)
+            if ignored_roles:
+                for xd in ignored_roles:
+                    logging.info(f"checking for ignored role: {xd}")
+                    if xd in str(member.roles):
+                        logging.info(f"{x.name} ignored")
+                        continue
+                    else:
+                        valid_users.append(member.name)
+                        logging.info(f"{x.name} valid")
+            else:
+                valid_users.append(member.name)
+                logging.info(f"{x.name} valid")
+        await ctx.send(choice(valid_users))
+        logging.info("pick finished\n-------------")
+
 
 def setup(bot):
     bot.add_cog(Coord(bot))
