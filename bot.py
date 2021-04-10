@@ -16,6 +16,7 @@ initial_cogs = [
     "jishaku",
     "cogs.error_handler",
     "cogs.coord",
+    "cogs.neko",
     "cogs.text"
 ]
 
