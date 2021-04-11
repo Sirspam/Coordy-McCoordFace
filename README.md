@@ -1,4 +1,5 @@
 ## Commands
+All of the commands below use the prefix **cc**.
 ### General commands
 | Command | Description |
 | --- | --- |

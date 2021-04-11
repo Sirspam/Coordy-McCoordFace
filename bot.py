@@ -8,8 +8,8 @@ from utils import jskp
 load_dotenv(os.getcwd()+"/config.env")
 intents = discord.Intents.default()
 intents.members = True
-bot = commands.Bot(command_prefix="!c ", max_messages = None, intents=intents, case_insensitive=True)
-logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.INFO)
+bot = commands.Bot(command_prefix="cc ", max_messages = None, intents=intents, case_insensitive=True)
+logging.basicConfig(format='%(asctime)s:%(levelname)s:%(name)s: %(message)s', level=logging.INFO)
 
 
 initial_cogs = [
