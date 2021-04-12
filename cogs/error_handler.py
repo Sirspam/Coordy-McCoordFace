@@ -35,9 +35,16 @@ class ErrorHandler(commands.Cog):
             # \n``Missing: {error.param.name}``")
             return await ctx.send(f"You didn't give a required argument.", delete_after=20)
 
-        elif isinstance(error, commands.CheckFailure) or isinstance(error, commands.MissingPermissions):
+        elif isinstance(error, commands.MissingPermissions):
             logging.info("MissingPermissions handler ran\n----------")
             return await ctx.send("You don't have the permissions for this command.", delete_after=20)
+        
+        elif isinstance(error, commands.NSFWChannelRequired):
+            logging.info("NSFWChannelRequired hander ran\n----------")
+            return await ctx.reply("How lewd of you <:AYAYAFlushed:822094723199008799>")
+
+        elif isinstance(error, commands.CheckFailure):
+            logging.error(f"{error}\n----------")
         logging.error(f"{error}\n----------")
 
 
