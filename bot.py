@@ -1,14 +1,17 @@
 import discord
 import os
 import logging
+import json
 from discord.ext import commands
 from dotenv import load_dotenv
-from utils import jskp
 
-load_dotenv(os.getcwd()+"/config.env")
+
+load_dotenv(os.getcwd()+".env")
+
+
 intents = discord.Intents.default()
 intents.members = True
-bot = commands.Bot(command_prefix="cc ", max_messages = None, intents=intents, case_insensitive=True)
+bot = commands.Bot(command_prefix=json.load(open("config.json",))["prefix"], max_messages = None, intents=intents, case_insensitive=True)
 logging.basicConfig(format='%(asctime)s:%(levelname)s:%(name)s: %(message)s', level=logging.INFO)
 
 
@@ -26,6 +29,7 @@ for cog in initial_cogs:
         logging.info(f"Successfully loaded {cog}")
     except Exception as e:
         logging.error(f"Failed to load cog {cog}: {e}")
+
 
 @bot.event
 async def on_ready():

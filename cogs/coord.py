@@ -5,14 +5,11 @@ from random import getrandbits
 from random import choice
 
 
-roles_config = json.load(open("roles_config.json",))
-
-
-# These variables need to be changed for whatever discord server the bot is being used in
-lobby_vc_id = roles_config["lobby_vc_id"] # int - Must be voice channel ID
-coord_roles_ids = roles_config["coord_roles_ids"] # int - Must be role ID
-ignored_roles = roles_config["ignored_roles"] # str - Can be either role name or role ID
-
+config = json.load(open("config.json",))
+lobby_vc_id = config["lobby_vc_id"] # int - Must be voice channel ID
+coord_roles_ids = config["coord_roles_ids"] # int - Must be role ID
+ignored_roles = config["ignored_roles"] # str - Can be either role name or role ID
+del config # Deleting config just to save memory
 
 
 class Coord(commands.Cog):
@@ -47,6 +44,7 @@ class Coord(commands.Cog):
         await ctx.message.delete()
         logging.info("Finished muting\n-------------")
 
+
     @commands.command(aliases=["um"], help="Unmutes users in your vc.")
     @commands.has_any_role(*coord_roles_ids)
     async def unmute(self, ctx):
@@ -63,6 +61,7 @@ class Coord(commands.Cog):
         await ctx.message.delete()
         logging.info("Finished unmuting\n-------------")
     
+
     @commands.command(aliases=["out"], help="Moves users to the lobby vc.")
     @commands.has_any_role(*coord_roles_ids)
     async def move_out(self, ctx):
@@ -90,6 +89,7 @@ class Coord(commands.Cog):
         await ctx.message.delete()
         logging.info("Finished moving\n-------------")
 
+
     @commands.command(aliases=["in"], help="Moves mentioned users to your vc.")
     @commands.has_any_role(*coord_roles_ids)
     async def move_in(self, ctx, *, argument):
@@ -104,6 +104,7 @@ class Coord(commands.Cog):
         await ctx.message.delete()
         logging.info("Finished moving\n-------------")
 
+
     @commands.command(help="Flips a coin")
     @commands.has_any_role(*coord_roles_ids)
     async def coin(self, ctx):
@@ -113,6 +114,7 @@ class Coord(commands.Cog):
         else:
             await ctx.send("Tails")
         logging.info("Coin ended\n-------------")
+
 
     @commands.command(help="Picks a random user in your vc")
     @commands.has_any_role(*coord_roles_ids)
