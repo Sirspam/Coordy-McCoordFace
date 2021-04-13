@@ -6,7 +6,7 @@ from discord.ext import commands
 from dotenv import load_dotenv
 
 
-load_dotenv(os.getcwd()+".env")
+load_dotenv(os.getcwd()+"/.env")
 
 
 intents = discord.Intents.default()
