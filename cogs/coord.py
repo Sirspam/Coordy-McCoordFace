@@ -42,7 +42,7 @@ class Coord(commands.Cog):
                 await member.edit(mute=True, deafen=True)
                 logging.info(f"{x.name} muted")
         await ctx.message.delete()
-        logging.info("Finished muting\n-------------")
+        logging.info("Finished muting")
 
 
     @commands.command(aliases=["um"], help="Unmutes users in your vc.")
@@ -59,7 +59,7 @@ class Coord(commands.Cog):
                 await member.edit(mute=False, deafen=False)
                 logging.info(f"{x.name} unmuted")
         await ctx.message.delete()
-        logging.info("Finished unmuting\n-------------")
+        logging.info("Finished unmuting")
     
 
     @commands.command(aliases=["out"], help="Moves users to the lobby vc.")
@@ -87,7 +87,7 @@ class Coord(commands.Cog):
                 await member.move_to(self.bot.get_channel(lobby_vc_id))
                 logging.info(f"{x.name} moved")
         await ctx.message.delete()
-        logging.info("Finished moving\n-------------")
+        logging.info("Finished moving")
 
 
     @commands.command(aliases=["in"], help="Moves mentioned users to your vc.")
@@ -102,7 +102,7 @@ class Coord(commands.Cog):
             except Exception as e:
                 logging.error(f"moving of {victim.name} failed: {e}")
         await ctx.message.delete()
-        logging.info("Finished moving\n-------------")
+        logging.info("Finished moving")
 
 
     @commands.command(help="Flips a coin")
@@ -113,7 +113,7 @@ class Coord(commands.Cog):
             await ctx.send("Heads")
         else:
             await ctx.send("Tails")
-        logging.info("Coin ended\n-------------")
+        logging.info("Coin ended")
 
 
     @commands.command(help="Picks a random user in your vc")
@@ -142,7 +142,7 @@ class Coord(commands.Cog):
                 valid_users.append(member.name)
                 logging.info(f"{x.name} valid")
         await ctx.send(choice(valid_users))
-        logging.info("Picking finished\n-------------")
+        logging.info("Picking finished")
 
 
 def setup(bot):

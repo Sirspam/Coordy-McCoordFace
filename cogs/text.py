@@ -16,7 +16,7 @@ class Text(commands.Cog):
             color=0x00A9E0)
         embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/787809230639202354.png?v=1")
         await ctx.send(embed=embed)
-        logging.info(f'Link embed sent\n----------')
+        logging.info(f'Link embed sent')
 
     @commands.command(case_insensitive=True, aliases=["nick"], help="Changes the bot's nickname")
     @commands.has_permissions(administrator = True)
