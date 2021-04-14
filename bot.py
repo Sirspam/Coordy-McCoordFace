@@ -11,7 +11,7 @@ load_dotenv(os.getcwd()+"/.env")
 
 intents = discord.Intents.default()
 intents.members = True
-bot = commands.Bot(command_prefix=json.load(open("config.json",))["prefix"], max_messages = None, intents=intents, case_insensitive=True)
+bot = commands.Bot(command_prefix=json.load(open("config.json",))["prefix"], max_messages = None, intents=intents, case_insensitive=True, allowed_mentions=discord.AllowedMentions(replied_user=False))
 logging.basicConfig(format='%(asctime)s:%(levelname)s:%(name)s: %(message)s', level=logging.INFO)
 
 
