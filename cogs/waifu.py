@@ -19,8 +19,8 @@ class Waifu(commands.Cog, command_attrs=dict(hidden=True)):
         async with ctx.channel.typing():
             results = await get_image(self, f"sfw/waifu")
             try:
-                await ctx.reply(file=discord.File(results[0], f"{category}{results[1]}"))
-            except HTTPException:
+                await ctx.reply(file=discord.File(results[0], f"waifu{results[1]}"))
+            except discord.HTTPException:
                 await ctx.reply(results[2])
         logging.info("attachment sent")
 
@@ -31,8 +31,8 @@ class Waifu(commands.Cog, command_attrs=dict(hidden=True)):
         async with ctx.channel.typing():
             results = await get_image(self, f"sfw/neko")
             try:
-                await ctx.reply(file=discord.File(results[0], f"{category}{results[1]}"))
-            except HTTPException:
+                await ctx.reply(file=discord.File(results[0], f"neko{results[1]}"))
+            except discord.HTTPException:
                 await ctx.reply(results[2])
         logging.info("attachment sent")
 
