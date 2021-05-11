@@ -18,7 +18,10 @@ class Waifu(commands.Cog, command_attrs=dict(hidden=True)):
         logging.info(f"waifu invoked")
         async with ctx.channel.typing():
             results = await get_image(self, f"sfw/waifu")
-            await ctx.reply(file=discord.File(results[0], f"waifu{results[1]}"))
+            try:
+                await ctx.reply(file=discord.File(results[0], f"{category}{results[1]}"))
+            except HTTPException:
+                await ctx.reply(results[2])
         logging.info("attachment sent")
 
     @commands.cooldown(1, 5, commands.BucketType.user)
@@ -27,7 +30,10 @@ class Waifu(commands.Cog, command_attrs=dict(hidden=True)):
         logging.info(f"neko invoked")
         async with ctx.channel.typing():
             results = await get_image(self, f"sfw/neko")
-            await ctx.reply(file=discord.File(results[0], f"neko{results[1]}"))
+            try:
+                await ctx.reply(file=discord.File(results[0], f"{category}{results[1]}"))
+            except HTTPException:
+                await ctx.reply(results[2])
         logging.info("attachment sent")
 
 def setup(bot):
