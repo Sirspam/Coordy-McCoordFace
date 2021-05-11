@@ -32,7 +32,7 @@ class BeatSaver(commands.Cog):
 
 
     @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.command(aliases=["bs","bsr"])
+    @commands.command(aliases=["bs","bsr"], help="Posts stats for the given bsr code /beatsaver key")
     async def beatsaver(self, ctx, key, diff=None):
         logging.info(f"Running beatsaver with {key} as key")
         async with ctx.channel.typing():
