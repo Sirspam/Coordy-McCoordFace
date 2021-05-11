@@ -5,21 +5,29 @@ import io
 import json
 import logging
 from discord.ext import commands
-from random import choice
 from os.path import splitext
 
-class Waifu(commands.Cog):
+class Waifu(commands.Cog, command_attrs=dict(hidden=True)):
     def __init__(self, bot):
         self.bot = bot
 
 
     @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.group(invoke_without_command=True, aliases=["wa"], help="Posts a waifu")
+    @commands.group(aliases=["wa"], help="Posts a waifu")
     async def waifu(self, ctx):
         logging.info(f"waifu invoked")
         async with ctx.channel.typing():
             results = await get_image(self, f"sfw/waifu")
             await ctx.reply(file=discord.File(results[0], f"waifu{results[1]}"))
+        logging.info("attachment sent")
+
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.group(help="Posts a neko")
+    async def neko(self, ctx):
+        logging.info(f"neko invoked")
+        async with ctx.channel.typing():
+            results = await get_image(self, f"sfw/neko")
+            await ctx.reply(file=discord.File(results[0], f"neko{results[1]}"))
         logging.info("attachment sent")
 
 def setup(bot):
