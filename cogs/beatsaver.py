@@ -80,7 +80,12 @@ class BeatSaver(commands.Cog):
                 inline=False
             )
             embed.set_image(url="https://beatsaver.com"+detail_text["coverURL"])
-            await ctx.send(embed=embed)
+            await ctx.reply(embed=embed)
+
+    @beatsaver.error
+    async def beatsaver_error(self, ctx, error):
+        if isinstance (error, commands.BadArgument):
+            await ctx.send("You've given a bad argument!\nYou should totally try ``e970`` though <:AYAYATroll:839891422140432405>")
 
 
 def setup(bot):
