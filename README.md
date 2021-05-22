@@ -9,7 +9,7 @@ Coordy McCoordFace is a discord bot I've made to help assist in the coordination
 | leave | Makes the bot leave the guild. Requires admin privileges. |
 
 ### Coordination Commands
-All of the commands below require the role specified in the coord_roles_ids list. Furthermore, individuals with a role specified in the ignored_roles list will not be affected when these commands are ran, the command author will also be exempt.
+All of the commands below require the role specified in the coord_roles_ids list or admin privileges. Furthermore, individuals with a role specified in the ignored_roles list will not be affected when these commands are ran, the command author will also be exempt.
 | Command | Alias | Description |
 | --- | --- | --- |
 | mute | m | Mutes all users in the author's vc |
@@ -20,7 +20,8 @@ All of the commands below require the role specified in the coord_roles_ids list
 | move_in \[mentions\] | in | Moves all users mentioned into the author's vc |
 | beatsaver \[key\] | bs, bsr | Gets information on a certain beatmap |
 | coin |  | Flips a coin |
-| pick |  | Picks a random person in the author's vc | 
+| pick_user | p_u | Picks a random person in the author's vc | 
+| pick_number \[value\] | pick_num, p_n | Picks a random number between 1 and the given argument | 
 
 ### Configuration Commands
 All of the commands below require admin privileges.

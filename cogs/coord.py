@@ -2,8 +2,7 @@ import discord
 import logging
 from functools import partial
 from discord.ext import commands
-from random import getrandbits
-from random import choice
+from random import getrandbits, choice, randint
 
 
 async def member_edit(self, ctx, type):
@@ -48,10 +47,12 @@ class Coord(commands.Cog):
         def predicate(ctx):
             if not isinstance(ctx.channel, discord.abc.GuildChannel):
                 raise commands.NoPrivateMessage
+            if ctx.author.guild_permissions.administrator is True:
+                return True
             getter = partial(discord.utils.get, ctx.author.roles)
             if any(getter(id=item) is not None if isinstance(item, int) else getter(name=item) is not None for item in ctx.bot.config[str(ctx.guild.id)]["coord_roles_ids"]):
                 return True
-            raise commands.MissingPermissions
+            raise commands.MissingPermissions("Coordinator Role")
         return commands.check(predicate)
 
     @commands.command(aliases=["m"], help="Mutes users in your vc.")
@@ -153,16 +154,16 @@ class Coord(commands.Cog):
             await ctx.send("Tails")
         logging.info("Coin ended")
 
-    @commands.command(help="Picks a random user in your vc")
+    @commands.command(aliases=["p_u"], help="Picks a random user in your vc")
     @guild_coord_role_check()
-    async def pick(self, ctx):
-        logging.info("Pick ran")
+    async def pick_user(self, ctx):
+        logging.info(f"pick_user invoked in {ctx.guild.name}")
         if ctx.author.voice is None:
             return await ctx.send("You aren't in a voice channel!")
         voice = self.bot.get_channel(ctx.author.voice.channel.id)
         ignored_roles = self.bot.config[str(ctx.guild.id)]["ignored_roles"]
         logging.info(f"Picking user in {voice.name}")
-        valid_users = []
+        valid_users = list()
         for x in voice.members:
             if x.id == ctx.author.id:
                 continue
@@ -180,7 +181,14 @@ class Coord(commands.Cog):
                 valid_users.append(member.name)
                 logging.info(f"{x.name} valid")
         await ctx.send(choice(valid_users))
-        logging.info("Picking finished")
+        logging.info("pick_user concluded")
+
+    @commands.command(aliases=["pick_num","p_n"], help="Picks a random number inbetween 1 and the given argument")
+    @guild_coord_role_check()
+    async def pick_number (self, ctx, value: int):
+        logging.info(f"pick_number invoked in {ctx.guild.name}")
+        await ctx.send(randint(1,value))
+        logging.info("pick_number concluded")
 
 
 def setup(bot):
