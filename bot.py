@@ -36,6 +36,7 @@ bot.config = config
 initial_cogs = [
     "jishaku",
     "cogs.beatsaver",
+    "cogs.configuration",
     "cogs.coord",
     "cogs.error_handler",
     "cogs.general",
