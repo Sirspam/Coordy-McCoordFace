@@ -8,7 +8,7 @@ import logging
 from discord.ext import commands
 
 
-diff_emotes = {
+diff_emotes = { # Emotes from Sirver
     "easy": "<:Easy_1:822072552570486804><:Easy_2:822072552407040051>",
     "normal": "<:Normal_1:822072552544927774><:Normal_2:822072552582021120><:Normal_3:822072552540864532>",
     "hard": "<:Hard_1:822072552288813108><:Hard_2:822072552452522035>",
@@ -42,7 +42,7 @@ class BeatSaver(commands.Cog):
                 detail_text = json.loads(await resp.text())
             async with self.bot.session.get(f"https://beatsaver.com/api/stats/key/{key}") as resp:
                 stats_text = json.loads(await resp.text())
-            difficulties = []
+            difficulties = list()
             for x in detail_text["metadata"]["difficulties"]:
                 if detail_text["metadata"]["difficulties"][x] is True:
                     difficulties.append(x)

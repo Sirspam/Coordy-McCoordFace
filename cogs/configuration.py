@@ -89,9 +89,9 @@ async def create_config(self, guild):
         logging.info(f"Creating config for {guild.name}")
         self.bot.config[str(guild.id)]={
             "prefix": "cc ",
-            "lobby_vc_id":None,
-            "coord_roles_ids":[None],
-            "ignored_roles":[None]
+            "lobby_vc_id":int(),
+            "coord_roles_ids":list(),
+            "ignored_roles":list()
         }
         json.dump(self.bot.config,open("config.json","w"))
         logging.info(f"{guild.name} added to config json")
