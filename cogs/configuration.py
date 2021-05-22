@@ -1,5 +1,6 @@
 import json
 import logging
+import discord
 from discord.ext import commands
 
 
@@ -24,7 +25,47 @@ class Configuration(commands.Cog):
     @commands.group(invoke_without_command=True, help="Posts the current configuration")
     @commands.has_permissions(administrator = True)
     async def config(self, ctx):
+        logging.info(f"Config invoked in {ctx.guild.name}")
+        embed = discord.Embed(title=f"{ctx.guild.name} Config",)
+        embed.add_field(
+            name="Prefix",
+            value=f"``{self.bot.config[str(ctx.guild.id)]['prefix']}``",
+            inline=True
+        )
+        embed.add_field(
+            name="Lobby VC",
+            value=ctx.guild.get_channel(self.bot.config[str(ctx.guild.id)]["lobby_vc_id"]),
+            inline=True
+        )
+        message = str()
+        for role in self.bot.config[str(ctx.guild.id)]["coord_roles_ids"]:
+            message = f"{message}{(ctx.guild.get_role(role)).mention} "
+        if not message:
+            message = "None"
+        embed.add_field(
+            name="Coordinator Roles",
+            value=message,
+            inline=False
+        )
+        message = str()
+        for role in self.bot.config[str(ctx.guild.id)]["ignored_roles_ids"]:
+            message = f"{message}{(ctx.guild.get_role(role)).mention} "
+        if not message:
+            message = "None"
+        embed.add_field(
+            name="Ignored Roles",
+            value=message,
+            inline=True
+        )
+        await ctx.send(embed=embed)
+        logging.info("config concluded")
+
+    @commands.group(invoke_without_command=True, help="Posts the current configuration in a raw format")
+    @commands.has_permissions(administrator = True)
+    async def config_raw(self, ctx):
+        logging.info(f"config_raw invoked in {ctx.guild.name}")
         await ctx.send(self.bot.config[str(ctx.guild.id)])
+        logging.info("config_raw concluded")
 
     @config.command(help="Creates a config for this guild")
     async def create(self, ctx):
@@ -51,7 +92,8 @@ class Configuration(commands.Cog):
     @config.command(help="Sets the lobby vc id for this guild")
     async def set_lobby(self, ctx, lobby_id: int):
         logging.info(f"Recieved set_lobby {lobby_id} in {ctx.guild.name}")
-        if ctx.guild.get_channel(lobby_id) is None:
+        channel_object = ctx.guild.get_channel(lobby_id)
+        if channel_object is None or isinstance(channel_object, discord.TextChannel):
             raise commands.BadArgument
         self.bot.config[str(ctx.guild.id)]["lobby_vc_id"] = lobby_id
         json.dump(self.bot.config,open("config.json","w"))
@@ -73,11 +115,11 @@ class Configuration(commands.Cog):
     @config.command(help="Sets the ignored roles for this guild")
     async def set_ignored(self, ctx, *roles: int):
         logging.info(f"Recieved set_ignored {roles} in {ctx.guild.name}")
-        self.bot.config[str(ctx.guild.id)]["ignored_roles"] = list()
+        self.bot.config[str(ctx.guild.id)]["ignored_roles_ids"] = list()
         for role in roles:
             if ctx.guild.get_role(role) is None:
                 raise commands.BadArgument
-            self.bot.config[str(ctx.guild.id)]["ignored_roles"].append(role)
+            self.bot.config[str(ctx.guild.id)]["ignored_roles_ids"].append(role)
             json.dump(self.bot.config,open("config.json","w"))
         await ctx.message.add_reaction("✅")
         logging.info("ignored roles set")
@@ -91,7 +133,7 @@ async def create_config(self, guild):
             "prefix": "cc ",
             "lobby_vc_id":int(),
             "coord_roles_ids":list(),
-            "ignored_roles":list()
+            "ignored_roles_ids":list()
         }
         json.dump(self.bot.config,open("config.json","w"))
         logging.info(f"{guild.name} added to config json")
