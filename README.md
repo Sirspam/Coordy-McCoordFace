@@ -24,15 +24,16 @@ All of the commands below require the role specified in the coord_roles_ids list
 
 ### Configuration Commands
 All of the commands below require admin privileges.
+Multiple roles can be given for set_coords and set_ignored. The IDs for each role needs to be seperate by a space.
 | Command | Alias | Description |
 | --- | --- | --- |
 | config |  | Posts the configuration for the current guild |
 | config create |  | Creates a config for the guild |
 | config remove |  | Removes the guild from the config |
-| config set_prefix |  | Sets the bot's prefix for the guild |
-| config set_lobby |  | Sets the lobby vc id for the guild |
-| config set_coords |  | Sets the coordinator roles for the guild |
-| config set_ignored |  | Sets the ignored roles for the guild |
+| config set_prefix \[prefix\] |  | Sets the bot's prefix for the guild |
+| config set_lobby  \[vc ID\]|  | Sets the lobby vc id for the guild |
+| config set_coords \[role IDs\]|  | Sets the coordinator roles for the guild |
+| config set_ignored \[role IDs\]|  | Sets the ignored roles for the guild |
 
 ## Setting up Coordy McCoordFace
 * Install modules defined in 'requirements.txt' via pip.
