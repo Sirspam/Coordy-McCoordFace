@@ -9,14 +9,14 @@ async def member_edit(self, ctx, type):
     if ctx.author.voice is None:
         return await ctx.send("You aren't in a voice channel!")
     voice = self.bot.get_channel(ctx.author.voice.channel.id)
-    ignored_roles = self.bot.config[str(ctx.guild.id)]["ignored_roles"]
+    ignored_roles_ids = self.bot.config[str(ctx.guild.id)]["ignored_roles_ids"]
     logging.info(f"Running member_edit in {voice.name}")
     for x in voice.members:
         if x.id == ctx.author.id:
             continue
         member = ctx.guild.get_member(x.id)
-        if ignored_roles:
-            for xd in ignored_roles:
+        if ignored_roles_ids:
+            for xd in ignored_roles_ids:
                 logging.info(f"Checking for ignored role: {xd}")
                 if xd in str(member.roles):
                     logging.info(f"{x.name} ignored")
@@ -106,7 +106,7 @@ class Coord(commands.Cog):
     async def move_out(self, ctx):
         logging.info("Move_in ran")
         lobby_vc_id = self.bot.config[str(ctx.guild.id)]["lobby_vc_id"]
-        ignored_roles = self.bot.config[str(ctx.guild.id)]["ignored_roles"]
+        ignored_roles_ids = self.bot.config[str(ctx.guild.id)]["ignored_roles_ids"]
         if ctx.author.voice is None:
             return await ctx.send("You aren't in a voice channel!")
         voice = self.bot.get_channel(ctx.author.voice.channel.id)
@@ -115,8 +115,8 @@ class Coord(commands.Cog):
             if x.id == ctx.author.id:
                 continue
             member = ctx.guild.get_member(x.id)
-            if ignored_roles:
-                for xd in ignored_roles:
+            if ignored_roles_ids:
+                for xd in ignored_roles_ids:
                     logging.info(f"Checking for ignored role: {xd}")
                     if xd in str(member.roles):
                         logging.info(f"{x.name} ignored")
@@ -161,15 +161,15 @@ class Coord(commands.Cog):
         if ctx.author.voice is None:
             return await ctx.send("You aren't in a voice channel!")
         voice = self.bot.get_channel(ctx.author.voice.channel.id)
-        ignored_roles = self.bot.config[str(ctx.guild.id)]["ignored_roles"]
+        ignored_roles_ids = self.bot.config[str(ctx.guild.id)]["ignored_roles_ids"]
         logging.info(f"Picking user in {voice.name}")
         valid_users = list()
         for x in voice.members:
             if x.id == ctx.author.id:
                 continue
             member = ctx.guild.get_member(x.id)
-            if ignored_roles:
-                for xd in ignored_roles:
+            if ignored_roles_ids:
+                for xd in ignored_roles_ids:
                     logging.info(f"Checking for ignored role: {xd}")
                     if xd in str(member.roles):
                         logging.info(f"{x.name} ignored")
