@@ -13,7 +13,7 @@ class Waifu(commands.Cog, command_attrs=dict(hidden=True)):
 
 
     @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.group(aliases=["wa"], help="Posts a waifu")
+    @commands.command(aliases=["wa"], help="Posts a waifu")
     async def waifu(self, ctx):
         logging.info(f"waifu invoked")
         async with ctx.channel.typing():
@@ -25,7 +25,7 @@ class Waifu(commands.Cog, command_attrs=dict(hidden=True)):
         logging.info("attachment sent")
 
     @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.group(help="Posts a neko")
+    @commands.command(help="Posts a neko")
     async def neko(self, ctx):
         logging.info(f"neko invoked")
         async with ctx.channel.typing():
