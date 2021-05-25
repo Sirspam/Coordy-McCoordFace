@@ -18,7 +18,7 @@ All of the commands below require the role specified in the coord_roles_ids list
 | undeafen | ud | Unmutes and undeafens all users in the author's vc. |
 | move_out | out | Moves all users into the vc specified in the lobby_vc_id variable. |
 | move_in \[mentions\] | in | Moves all users mentioned into the author's vc. |
-| beatkhana \[user\] | bk | Gets information on a user from BeatKhana! |
+| beatkhana \[mention\] | bk | Gets information on a mentioned user from BeatKhana! |
 | beatsaver \[key\] | bs, bsr | Gets information on a certain beatmap. |
 | coin |  | Flips a coin. |
 | pick_user | p_u | Picks a random person in the author's vc. | 
