@@ -6,6 +6,7 @@ import discord
 import json
 import logging
 from discord.ext import commands
+from utils.role_checks import guild_coord_role_check
 
 
 diff_emotes = { # Emotes from Sirver
@@ -31,8 +32,9 @@ class BeatSaver(commands.Cog):
         self.bot = bot
 
 
-    @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(aliases=["bs","bsr"], help="Posts stats for the given bsr code /beatsaver key")
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @guild_coord_role_check()
     async def beatsaver(self, ctx, key, diff=None):
         logging.info(f"Running beatsaver with {key} as key")
         async with ctx.channel.typing():
@@ -85,7 +87,9 @@ class BeatSaver(commands.Cog):
     @beatsaver.error
     async def beatsaver_error(self, ctx, error):
         if isinstance (error, commands.BadArgument):
-            await ctx.send("You've given a bad argument!\nYou should totally try ``e970`` though <:AYAYATroll:839891422140432405>")
+            return await ctx.send("You've given a bad argument!\nYou should totally try ``e970`` though <:AYAYATroll:839891422140432405>")
+        elif isinstance (error, commands.MissingRequiredArgument):
+            return await ctx.send("You didn't give a required argument.\nYou should totally try ``e970`` though <:AquaTroll:845802819634462780>")
 
 
 def setup(bot):
