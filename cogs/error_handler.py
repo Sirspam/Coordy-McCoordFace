@@ -1,6 +1,7 @@
 import math
 import logging
 import asyncio
+from discord import Embed, Colour
 from discord.ext import commands
 
 
@@ -49,7 +50,19 @@ class ErrorHandler(commands.Cog):
             logging.info("NSFWChannelRequired hander ran")
             return await ctx.reply("How lewd of you <:AYAYAFlushed:822094723199008799>\n``This command can only be ran in an nsfw channel``")
 
-        logging.error(f"{error}")
+        logging.error(error)
+        await ctx.send(embed=Embed(
+            title="Uh oh, Something bad happened <:NotLikeAqua:822089498866221076>",
+            description="An unhandled error occured.\nIf this keeps occuring open an [issue report](https://github.com/Sirspam/Sirbot/issues) or go pester Sirspam <:AquaSmile:845802697474441236>",
+            colour=Colour.red()
+        ))
+        embed=Embed(
+            title=f"{ctx.command} in {ctx.guild.name}",
+            description=error,
+            colour=Colour.red()
+        )
+        embed.set_author(name=self.bot.user, icon_url=self.bot.user.avatar_url)
+        return await self.bot.get_channel(841306797985234954).send(embed=embed)
 
 
 def setup(bot):
