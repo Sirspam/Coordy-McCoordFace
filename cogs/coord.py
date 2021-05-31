@@ -132,7 +132,7 @@ class Coord(commands.Cog):
         await ctx.message.delete()
         logging.info("Finished moving")
 
-    @commands.command(help="Flips a coin")
+    @commands.command(help="Flips a coin", aliases=["flip","coinflip"])
     @guild_coord_role_check()
     async def coin(self, ctx):
         logging.info("Coin ran")
@@ -173,10 +173,29 @@ class Coord(commands.Cog):
 
     @commands.command(aliases=["pick_num","p_n"], help="Picks a random number inbetween 1 and the given argument")
     @guild_coord_role_check()
-    async def pick_number (self, ctx, value: int):
+    async def pick_number(self, ctx, value: int):
         logging.info(f"pick_number invoked in {ctx.guild.name}")
         await ctx.send(randint(1,value))
         logging.info("pick_number concluded")
+
+    @commands.command(aliases=["seperate","sep"], help="Posts a line seperator to help organise match text channels")
+    @guild_coord_role_check()
+    async def seperator(self, ctx):
+        logging.info(f"seperator invoked in {ctx.guild.name}")
+        await ctx.send("--------------------------------------------------------------")
+        logging.info("seperator concluded")
+
+# RESULTS:
+# 1: AuriRex - 1190357
+# 2: FreakFriends - 1158335
+
+    @commands.command(aliases=["diff"], help="Calculates the difference between two players from TA results")
+    @guild_coord_role_check()
+    async def difference(self, ctx, *, results):
+        splitted = results.split("\n")
+        if len(splitted) > 3:
+            raise commands.BadArgument
+        await ctx.send(f"{int((splitted[1].rsplit(' - ',1))[1]) - int((splitted[2].rsplit(' - ',1))[1]):,}")
 
 
 def setup(bot):
