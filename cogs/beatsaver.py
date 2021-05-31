@@ -6,15 +6,14 @@ import discord
 import json
 import logging
 from discord.ext import commands
-from utils.role_checks import guild_coord_role_check
 
 
-diff_emotes = { # Emotes from Sirver
-    "easy": "<:Easy_1:822072552570486804><:Easy_2:822072552407040051>",
-    "normal": "<:Normal_1:822072552544927774><:Normal_2:822072552582021120><:Normal_3:822072552540864532>",
-    "hard": "<:Hard_1:822072552288813108><:Hard_2:822072552452522035>",
-    "expert": "<:Expert_1:822072552556855317><:Expert_2:822072552532738068>",
-    "expertPlus": "<:ExpertPlus_1:822072552268496917><:ExpertPlus_2:822072552506916884><:ExpertPlus_3:822072552514912328>",
+diff_emotes = { # Emotes from sus
+    "easy": "<:Easy_1:848911334237012030><:Easy_2:848911334435455007>",
+    "normal": "<:Normal_1:848911334108299265><:Normal_2:848911334442926100><:Normal_3:848911334447513651>",
+    "hard": "<:Hard_1:848911334430212156><:Hard_2:848911334422478899>",
+    "expert": "<:Expert_1:848911334405177364><:Expert_2:848911334422216714>",
+    "expertPlus": "<:ExpertPlus_1:848911334392201246><:ExpertPlus_2:848911334426148874><:ExpertPlus_3:848911334400983050>",
 }
 
 
@@ -34,7 +33,6 @@ class BeatSaver(commands.Cog):
 
     @commands.command(aliases=["bs","bsr"], help="Posts stats for the given bsr code /beatsaver key")
     @commands.cooldown(1, 5, commands.BucketType.user)
-    @guild_coord_role_check()
     async def beatsaver(self, ctx, key, diff=None):
         logging.info(f"Running beatsaver with {key} as key")
         async with ctx.channel.typing():
