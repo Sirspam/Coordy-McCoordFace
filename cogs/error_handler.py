@@ -52,17 +52,15 @@ class ErrorHandler(commands.Cog):
 
         logging.error(error)
         await ctx.send(embed=Embed(
-            title="Uh oh, Something bad happened <:NotLikeAqua:822089498866221076>",
-            description="An unhandled error occured.\nIf this keeps occuring open an [issue report](https://github.com/Sirspam/Sirbot/issues) or go pester Sirspam <:AquaSmile:845802697474441236>",
+            title="Uh oh. Something bad happened <:NotLikeAqua:822089498866221076>",
+            description=f"An unhandled error occured.\nIf this keeps occuring open an [issue report](https://github.com/Sirspam/Coordy-McCoordFace/issues) or go pester Sirspam <:AquaSmile:845802697474441236>\n\n```{error}```",
             colour=Colour.red()
         ))
-        embed=Embed(
+        return await self.bot.get_channel(841306797985234954).send(embed=Embed(
             title=f"{ctx.command} in {ctx.guild.name}",
-            description=error,
+            description=f"```{error}```",
             colour=Colour.red()
-        )
-        embed.set_author(name=self.bot.user, icon_url=self.bot.user.avatar_url)
-        return await self.bot.get_channel(841306797985234954).send(embed=embed)
+        ))
 
 
 def setup(bot):
