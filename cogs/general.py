@@ -42,8 +42,8 @@ class General(commands.Cog):
 
     @commands.command(help="Parses the TA bot leaderboard to a txt file")
     @commands.has_permissions(administrator = True)
-    async def ta_txt(self, ctx, id: int):
-        logging.info(f"ta_txt invoked in {ctx.guild.name}")
+    async def ta_to_txt(self, ctx, id: int):
+        logging.info(f"ta_to_txt invoked in {ctx.guild.name}")
         try:
             message = await ctx.fetch_message(id)
         except NotFound:
@@ -55,8 +55,7 @@ class General(commands.Cog):
         iteration = 0 
         for field in message.embeds[0].fields:
             maps = maps+f", {field.name}"
-            content = field.value[4:]
-            content = content[:-5]
+            content = field.value[4:][:-5]
             content = content.replace("FC","")
             splitted = content.split(" \n\n")
             for x in splitted:
@@ -75,7 +74,7 @@ class General(commands.Cog):
             result = result+f"#{iteration}, {player}, {str(scores[player])[1:-1]}\n"
             iteration = iteration+1
         await ctx.reply(file=discord.File(StringIO(str(result)),f"{ctx.guild.name} {datetime.now()}.txt"))
-        logging.info("ta_txt concluded")
+        logging.info("ta_to_txt concluded")
 
 
 def setup(bot):
