@@ -8,7 +8,7 @@ Coordy McCoordFace is a discord bot I've made to help assist in the coordination
     * [Coordination Commands](#Coordination-Commands)
         * [Voice Channel Management](#Voice-Channel-Management)
         * [Utilities](#Utilities)
-    * [Administrator Commands][#Administrator-Commands]
+    * [Administrator Commands](#Administrator-Commands)
         * [Configuration Commands](#Configuration-Commands)
         * [Quality of Life Commands](#Quality-of-Life-Commands)
     * [Super Duper Secret Commands](#Super-Duper-Secret-Commands)
