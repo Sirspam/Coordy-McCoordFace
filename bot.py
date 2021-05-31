@@ -54,7 +54,7 @@ for cog in initial_cogs:
 
 @bot.event
 async def on_ready():
-    logging.info('Bot has successfully launched as {0.user}'.format(bot))
+    logging.info(f"Bot has successfully launched as {bot.user}")
 
 
 bot.run(os.getenv("TOKEN"))
