@@ -1,19 +1,19 @@
 Coordy McCoordFace is a discord bot I've made to help assist in the coordination of Beat Saber tournaments.
 
 ## Readme Index
-* [Readme Index](#Readme Index)
+* [Readme Index](#Readme-Index)
 * [Commands](#Commands)
-    * [General Commands](#General Commands)
-        * [BeatKhana! Commands](#BeatKhana! Commands)
-    * [Coordination Commands](#Coordination Commands)
-        * [Voice Channel Management](#Voice Channel Management)
+    * [General Commands](#General-Commands)
+        * [BeatKhana! Commands](#BeatKhana!-Commands)
+    * [Coordination Commands](#Coordination-Commands)
+        * [Voice Channel Management](#Voice-Channel-Management)
         * [Utilities](#Utilities)
-    * [Administrator Commands][#Administrator Commands]
-        * [Configuration Commands](#Configuration Commands)
-        * [Quality of Life Commands](#Quality of Life Commands)
-    * [Super Duper Secret Commands](#Super Duper Secret Commands)
-* [Setting up Coordy McCoordFace](#Setting up Coordy McCoordFace)
-    * [config.json definitions](#config.json definitions)
+    * [Administrator Commands][#Administrator-Commands]
+        * [Configuration Commands](#Configuration-Commands)
+        * [Quality of Life Commands](#Quality-of-Life-Commands)
+    * [Super Duper Secret Commands](#Super-Duper-Secret-Commands)
+* [Setting up Coordy McCoordFace](#Setting-up-Coordy-McCoordFace)
+    * [config.json definitions](#config.json-definitions)
         * [prefix](#prefix)
         * [lobby_vc_id](#lobby_vc_id)
         * [beatkhana_id](#beatkhana_id)
