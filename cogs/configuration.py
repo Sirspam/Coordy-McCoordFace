@@ -37,6 +37,17 @@ class Configuration(commands.Cog):
             value=ctx.guild.get_channel(self.bot.config[str(ctx.guild.id)]["lobby_vc_id"]),
             inline=True
         )
+        if not self.bot.config[str(ctx.guild.id)]["beatkhana_id"]:
+            message = "None"
+        else:
+            async with self.bot.session.get(f"https://beatkhana.com/api/tournament/{self.bot.config[str(ctx.guild.id)]['beatkhana_id']}") as resp:
+                json_data = json.loads(await resp.text())
+                message = f"[{json_data[0]['name']}](https://beatkhana.com/tournament/{self.bot.config[str(ctx.guild.id)]['beatkhana_id']})"
+        embed.add_field(
+            name="BeatKhana Page",
+            value=message,
+            inline=False
+        )
         message = str()
         for role in self.bot.config[str(ctx.guild.id)]["coord_roles_ids"]:
             message = f"{message}{(ctx.guild.get_role(role)).mention} "
@@ -45,7 +56,7 @@ class Configuration(commands.Cog):
         embed.add_field(
             name="Coordinator Roles",
             value=message,
-            inline=False
+            inline=True
         )
         message = str()
         for role in self.bot.config[str(ctx.guild.id)]["ignored_roles_ids"]:
@@ -55,12 +66,12 @@ class Configuration(commands.Cog):
         embed.add_field(
             name="Ignored Roles",
             value=message,
-            inline=True
+            inline=False
         )
         await ctx.send(embed=embed)
         logging.info("config concluded")
 
-    @commands.group(invoke_without_command=True, help="Posts the current configuration in a raw format")
+    @commands.command(invoke_without_command=True, help="Posts the current configuration in a raw format")
     @commands.has_permissions(administrator = True)
     async def config_raw(self, ctx):
         logging.info(f"config_raw invoked in {ctx.guild.name}")
@@ -124,6 +135,17 @@ class Configuration(commands.Cog):
         await ctx.message.add_reaction("✅")
         logging.info("ignored roles set")
 
+    @config.command(help="Sets the ignored roles for this guild")
+    async def set_beatkhana(self, ctx, beatkhana_id: int):
+        logging.info(f"Recieved set_beatkhana {beatkhana_id} in {ctx.guild.name}")
+        async with self.bot.session.get(f"https://beatkhana.com/api/tournament/{beatkhana_id}") as resp:
+            if "Tournament Not Found" in await resp.text():
+                raise commands.BadArgument
+        self.bot.config[str(ctx.guild.id)]["beatkhana_id"] = beatkhana_id
+        json.dump(self.bot.config,open("config.json","w"))
+        await ctx.message.add_reaction("✅")
+        logging.info("beatkhana id set")
+
 def setup(bot):
     bot.add_cog(Configuration(bot))
 
@@ -132,6 +154,7 @@ async def create_config(self, guild):
         self.bot.config[str(guild.id)]={
             "prefix": "cc ",
             "lobby_vc_id":int(),
+            "beatkhana_id":int(),
             "coord_roles_ids":list(),
             "ignored_roles_ids":list()
         }
