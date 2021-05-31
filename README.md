@@ -29,7 +29,7 @@ Coordy McCoordFace is a discord bot I've made to help assist in the coordination
 ### General Commands
 | Command | Alias | Description |
 | --- | --- | --- |
-| links | Post an embed containing relevant links for the bot. |
+| links |  | Post an embed containing relevant links for the bot. |
 | beatsaver \[key\] \(difficulty\)| bs, bsr | Gets information on a certain beatmap. |
 
 #### BeatKhana! Commands
