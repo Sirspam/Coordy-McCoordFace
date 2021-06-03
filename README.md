@@ -84,6 +84,8 @@ Notes:
 
 #### Quality of Life Commands
 Not necessarily needed for the bot to function.
+| Command | Description |
+| --- | --- |
 | nickname | Changes the bot's nickname to the provided argument. |
 | leave | Makes the bot leave the guild. |
 | ta_to_txt \[message id\] | Parses the TA bot leaderboard to a txt file. Useful for importing the contents into a Google Sheet. |
