@@ -29,9 +29,8 @@ class General(commands.Cog):
         if arg == "None":
             await ctx.guild.me.edit(nick=None)
             return logging.info(f"Nickname successfully reverted to default")
-        else:
-            await ctx.guild.me.edit(nick=arg)
-            return logging.info(f"Nickname successfully changed to: {arg}")
+        await ctx.guild.me.edit(nick=arg)
+        return logging.info(f"Nickname successfully changed to: {arg}")
 
     @commands.command(help="Makes the bot leave the guild")
     @commands.has_permissions(administrator = True)
@@ -42,10 +41,10 @@ class General(commands.Cog):
 
     @commands.command(help="Parses the TA bot leaderboard to a txt file")
     @commands.has_permissions(administrator = True)
-    async def ta_to_txt(self, ctx, id: int):
+    async def ta_to_txt(self, ctx, message_id: int):
         logging.info(f"ta_to_txt invoked in {ctx.guild.name}")
         try:
-            message = await ctx.fetch_message(id)
+            message = await ctx.fetch_message(message_id)
         except NotFound:
             raise BadArgument
         if not message.embeds or message.embeds[0].title != ":page_with_curl: Leaderboards":

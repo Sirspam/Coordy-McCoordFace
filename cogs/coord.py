@@ -4,7 +4,7 @@ from random import getrandbits, choice, randint
 from utils.role_checks import guild_coord_role_check
 
 
-async def member_edit(self, ctx, type):
+async def member_edit(self, ctx, action_type):
     if ctx.author.voice is None:
         return await ctx.send("You aren't in a voice channel!")
     voice = self.bot.get_channel(ctx.author.voice.channel.id)
@@ -21,17 +21,17 @@ async def member_edit(self, ctx, type):
                     logging.info(f"{x.name} ignored")
                     continue
                 else:
-                    if type == "mute":
+                    if action_type == "mute":
                         await member.edit(mute=True)
                         logging.info(f"{x.name} muted")
-                    elif type == "deafen":
+                    elif action_type == "deafen":
                         await member.edit(mute=True, deafen=True)
                         logging.info(f"{x.name} muted deafened")
         else:
-            if type == "mute":
+            if action_type == "mute":
                 await member.edit(mute=True)
                 logging.info(f"{x.name} muted")
-            elif type == "deafen":
+            elif action_type == "deafen":
                 await member.edit(mute=True, deafen=True)
                 logging.info(f"{x.name} muted deafened")
     await ctx.message.delete()

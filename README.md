@@ -1,3 +1,6 @@
+# Coordy McCoordFace
+[![CodeFactor](https://www.codefactor.io/repository/github/sirspam/coordy-mccoordface/badge)](https://www.codefactor.io/repository/github/sirspam/coordy-mccoordface)
+
 Coordy McCoordFace is a discord bot I've made to help assist in the coordination of Beat Saber tournaments.
 
 ## Readme Index

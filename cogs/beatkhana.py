@@ -59,13 +59,22 @@ class BeatKhana(commands.Cog):
         async with ctx.channel.typing():
             async with self.bot.session.get(f"https://beatkhana.com/api/tournament/{self.bot.config[str(ctx.guild.id)]['beatkhana_id']}") as resp:
                 json_data = json.loads(await resp.text())[0]
-            embed = discord.Embed(
-                title=json_data["name"],
-                description=json_data["twitchLink"],
-                colour=0xc8825a,
-                url=f"https://beatkhana.com/tournament/{self.bot.config[str(ctx.guild.id)]['beatkhana_id']}"
+            embed = discord.Embed(colour=0xc8825a)
+            embed.set_author(
+                name=f"{json_data['name']} Map Pools",
+                url=f"https://beatkhana.com/tournament/{self.bot.config[str(ctx.guild.id)]['beatkhana_id']}/map-pool",
+                icon_url=f"https://beatkhana.com/assets/images/{json_data['image']}"
             )
-            embed.set_thumbnail(url=f"https://beatkhana.com/assets/images/{json_data['image']}")
+            embed.add_field(
+                name="Info",
+                value=json_data["info"],
+                inline=False
+            )
+            embed.add_field(
+                name="Staff",
+                value="a",
+                inline=False
+            )
             await ctx.send(embed=embed)
 
     @beatkhana.command(help="Gets information on the tournament map pool", aliases=["map","m"])

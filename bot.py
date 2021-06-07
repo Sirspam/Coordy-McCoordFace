@@ -22,7 +22,7 @@ except FileNotFoundError:
 async def prefix(bot, ctx):
         try:
             return bot.config[str(ctx.guild.id)]["prefix"]
-        except:
+        except KeyError:
             return "cc "
 
 
