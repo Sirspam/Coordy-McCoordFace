@@ -42,6 +42,8 @@ Coordy McCoordFace is a discord bot I've made to help assist in the coordination
 | beatkhana tournament | bk tourney, bk t | Gets general information on the tournament |
 | beatkhana maps | bk maps, bk m | Gets information on the tournament map pool |
 | beatkhana brackets | bk bracket, bk b | Gets information on the tournament bracket (WIP) |
+| beakthana qualifiers | bk quals, bk q | Gets information on the tournament qualifiers |
+| beatkhana staff | bk s | Gets information on the tournament staff |
 
 ### Coordination Commands
 All of the commands below require the role specified in the coord_roles_ids list or admin privileges. Furthermore, individuals with a role specified in the ignored_roles_ids list will not be affected when these commands are ran, the command author will also be exempt.
