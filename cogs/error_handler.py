@@ -58,7 +58,7 @@ class ErrorHandler(commands.Cog):
         ))
         return await self.bot.get_channel(841306797985234954).send(embed=Embed(
             title=f"{ctx.command} in {ctx.guild.name}",
-            description=f"```{error}```",
+            description=f"**Message Content**```{ctx.message.content}```\n**Error**```{error}```",
             colour=Colour.red()
         ))
 
