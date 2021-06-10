@@ -148,6 +148,19 @@ class BeatKhana(commands.Cog):
     @beatkhana.command(help="Gets information on the tournament bracket", aliases=["bracket","b"])
     async def brackets(self, ctx):
         logging.info(f"beatkhana brackets invoked in {ctx.guild.name}")
+        async with ctx.channel.typing():
+            async with self.bot.session.get(f"https://beatkhana.com/api/tournament/{self.bot.config[str(ctx.guild.id)]['beatkhana_id']}") as resp:
+                tourney_json_data = json.loads(await resp.text())[0]
+            # async with self.bot.session.get(f"https://beatkhana.com/api/tournament/{self.bot.config[str(ctx.guild.id)]['beatkhana_id']}/bracket") as resp:
+            #     pool_json_data = json.loads(await resp.text())
+        embed=discord.Embed(colour=0xc8825a)
+        embed.set_author(
+            name=f"{tourney_json_data['name']} Brackets",
+            url=f"https://beatkhana.com/tournament/{self.bot.config[str(ctx.guild.id)]['beatkhana_id']}/bracket",
+            icon_url=f"https://beatkhana.com/assets/images/{tourney_json_data['image']}"
+        )
+        await ctx.send(embed=embed)
+        logging.info("Successfully cncluded beatkhana brackets")
 
     @beatkhana.command(help="Gets information on the tournament qualifiers", aliases=["quals","q"])
     async def qualifiers(self, ctx):
