@@ -22,7 +22,7 @@ Coordy McCoordFace is a discord bot I've made to help assist in the coordination
         * [beatkhana_id](#beatkhana_id)
         * [coord_roles_ids](#coord_roles_ids)
         * [ignored_roles_ids](ignored_roles_ids)
-* [To-Do](#To-Do)
+* [Previous Tournaments Coordy Has Been Used In](#Previous-Tournaments-Coordy-Has-Been-Used-In)
 
 
 
@@ -124,7 +124,11 @@ This list should contain the role IDs for those who should have access to the co
 #### ignored_roles_ids
 Roles defined in this list, as IDs, will be ignored by all coordination command. This may be helpful if there's casters or spectators in the same voice channel as players.
 
-## To-Do
-* Beatkhana brackets command
-* Configurable Best Of X pick and ban procedure
-* Google Translate command? (Blame the Austrians)
+## Previous Tournaments Coordy Has Been Used In
+* Scuffed Tourneys
+* Cillerian e-Sports
+* LMAO Clan Double Elimination
+* [Dach Tournament Season 1](https://beatkhana.com/tournament/2147484227)
+* [NBST Spring 2021](https://beatkhana.com/tournament/2147484215)
+* [Beat Sage Royale](https://beatkhana.com/tournament/2147484230)
+* [ATI - Austrian Tournament 1](https://beatkhana.com/tournament/2147484231)
