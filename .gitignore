@@ -1,5 +1,5 @@
 utils/__pycache__/
 cogs/__pycache__/
 .env
-config.json
+database.db
 .vscode/

@@ -3,6 +3,10 @@
 
 Coordy McCoordFace is a discord bot I've made to help assist in the coordination of Beat Saber tournaments.
 
+[Invite Link](https://discord.com/oauth2/authorize?client_id=813699805150838795&permissions=29666368&scope=bot) (Currently not hosted 24/7. it's recommended to locally host it yourself.)
+
+[Support Server](https://discord.gg/dWX6fpGUK9)
+
 ## Readme Index
 * [Readme Index](#Readme-Index)
 * [Commands](#Commands)
@@ -15,15 +19,8 @@ Coordy McCoordFace is a discord bot I've made to help assist in the coordination
         * [Configuration Commands](#Configuration-Commands)
         * [Quality of Life Commands](#Quality-of-Life-Commands)
     * [Super Duper Secret Commands](#Super-Duper-Secret-Commands)
-* [Setting up Coordy McCoordFace](#Setting-up-Coordy-McCoordFace)
-    * [config.json definitions](#config.json-definitions)
-        * [prefix](#prefix)
-        * [lobby_vc_id](#lobby_vc_id)
-        * [beatkhana_id](#beatkhana_id)
-        * [coord_roles_ids](#coord_roles_ids)
-        * [ignored_roles_ids](ignored_roles_ids)
+* [Hosting Coordy McCoordFace](#Setting-up-Coordy-McCoordFace)
 * [Previous Tournaments Coordy Has Been Used In](#Previous-Tournaments-Coordy-Has-Been-Used-In)
-
 
 
 ## Commands
@@ -79,7 +76,7 @@ Notes:
 | Command | Description |
 | --- | --- |
 | config | Posts the configuration for the current guild |
-| config_raw | Posts the configuration for the current guild in a raw format. |
+| config raw | Posts the configuration for the current guild in a raw format. |
 | config create | Creates a config for the guild. |
 | config remove | Removes the guild from the config. |
 | config set_prefix \[prefix\] | Sets the bot's prefix for the guild. |
@@ -101,28 +98,12 @@ Not necessarily needed for the bot to function.
 | waifu | wa | Posts a waifu. |
 | neko |  | Posts a neko. |
 
-## Setting up Coordy McCoordFace
+## Hosting Coordy McCoordFace
 * Download the master branch.
 * Install modules defined in 'requirements.txt' via pip.
 * Create an .env file and define your bot's token in a variable named 'TOKEN'.
 * Run 'bot.py'.
-* Set-up Coordy with the [configuration commands](#Configuration Commands).
-
-### config.json definitions
-#### prefix
-The value defined here will act as the bot's prefix.
-
-#### lobby_vc_id
-This value should be the ID for your discord server's lobby/waiting room voice channel.
-
-#### beatkhana_id
-This is the ID for the tournament's [BeatKhana!](https://beatkhana.com/) page. If an ID isn't configured than only the root BeatKhana! command will work. 
-
-#### coord_roles_ids
-This list should contain the role IDs for those who should have access to the coordination commands.
-
-#### ignored_roles_ids
-Roles defined in this list, as IDs, will be ignored by all coordination command. This may be helpful if there's casters or spectators in the same voice channel as players.
+* Invite the bot to your server and set-up the config with the [configuration commands](#Configuration-Commands).
 
 ## Previous Tournaments Coordy Has Been Used In
 * Scuffed Tourneys

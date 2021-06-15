@@ -1,23 +1,21 @@
 import discord
 import os
 import logging
-import json
 import aiohttp
 import asyncio
 from discord.ext import commands
 from dotenv import load_dotenv
+from sqlite3 import connect
 
 
 logging.basicConfig(format='%(asctime)s:%(levelname)s:%(name)s: %(message)s', level=logging.INFO)
 
 load_dotenv(os.getcwd()+"/.env")
 
-try:
-    config = (json.load(open("config.json",)))
-except FileNotFoundError:
-    logging.warning("config.json not found. Creating config")
-    json.dump(dict(),open("config.json","w"))
-    config = (json.load(open("config.json",)))
+with connect("database.db") as dab:
+    dab.execute("CREATE TABLE IF NOT EXISTS guilds (guild_id BIGINT PRIMARY KEY, prefix TEXT, lobby_vc BIGINT, beatkhana BIGINT)")
+    dab.execute("CREATE TABLE IF NOT EXISTS coord_roles (guild_id BIGINT REFERENCES guilds (guild_id) ON DELETE CASCADE, role BIGINT, PRIMARY KEY (guild_id, role))")
+    dab.execute("CREATE TABLE IF NOT EXISTS ignored_roles (guild_id BIGINT REFERENCES guilds (guild_id) ON DELETE CASCADE, role BIGINT, PRIMARY KEY (guild_id, role))")
 
 async def prefix(bot, ctx):
         try:
@@ -30,7 +28,7 @@ intents = discord.Intents.default()
 intents.members = True
 bot = commands.Bot(command_prefix=prefix, max_messages = None, intents=intents, case_insensitive=True, allowed_mentions=discord.AllowedMentions(replied_user=False))
 bot.session = aiohttp.ClientSession(loop=asyncio.get_event_loop(), headers={"User-Agent": "Coordy McCoordFace (https://github.com/Sirspam/Coordy-McCoordFace)"})
-bot.config = config
+bot.config = dict()
 
 
 initial_cogs = [
