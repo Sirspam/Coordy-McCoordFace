@@ -93,6 +93,7 @@ class Configuration(commands.Cog):
         logging.info(f"Removing {ctx.guild.name} from config")
         del self.bot.config[ctx.guild.id]
         async with aiosqlite.connect("database.db") as dab:
+            await dab.execute("PRAGMA foreign_keys = TRUE")
             await dab.execute("DELETE FROM guilds WHERE guild_id=?", (ctx.guild.id,))
             await dab.commit()
         await ctx.message.add_reaction("✅")
