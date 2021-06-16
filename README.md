@@ -71,13 +71,12 @@ All of the commands below require admin privileges.
 The bot **must** be configured before usage, otherwise the majority of commands won't work correctly.
 Notes:
 * Multiple roles can be given for set_coords and set_ignored. The IDs for each role need to be seperate by a space.
-* A config will be automatically created when the bot joins a guild so config create would only be needed if the config has been removed.
+* A config will be automatically created when the bot joins a guild or if it detects there's no config when running a command which accesses it.
 
 | Command | Description |
 | --- | --- |
 | config | Posts the configuration for the current guild |
 | config raw | Posts the configuration for the current guild in a raw format. |
-| config create | Creates a config for the guild. |
 | config remove | Removes the guild from the config. |
 | config set_prefix \[prefix\] | Sets the bot's prefix for the guild. |
 | config set_lobby  \[vc ID\] | Sets the lobby vc id for the guild. |

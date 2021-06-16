@@ -83,11 +83,6 @@ class Configuration(commands.Cog):
         await ctx.send(self.bot.config[ctx.guild.id])
         logging.info("config raw concluded")
 
-    @config.command(help="Creates a config for this guild")
-    async def create(self, ctx):
-        await create_config(ctx.guild)
-        await ctx.message.add_reaction("✅")
-
     @config.command(help="Removes this guild from the config")
     async def remove(self, ctx):
         logging.info(f"Removing {ctx.guild.name} from config")
