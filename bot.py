@@ -13,9 +13,9 @@ logging.basicConfig(format='%(asctime)s:%(levelname)s:%(name)s: %(message)s', le
 load_dotenv(os.getcwd()+"/.env")
 
 with connect("database.db") as dab:
-    dab.execute("CREATE TABLE IF NOT EXISTS guilds (guild_id BIGINT PRIMARY KEY, prefix TEXT, lobby_vc BIGINT, beatkhana BIGINT)")
-    dab.execute("CREATE TABLE IF NOT EXISTS coord_roles (guild_id BIGINT REFERENCES guilds (guild_id) ON DELETE CASCADE, role BIGINT, PRIMARY KEY (guild_id, role))")
-    dab.execute("CREATE TABLE IF NOT EXISTS ignored_roles (guild_id BIGINT REFERENCES guilds (guild_id) ON DELETE CASCADE, role BIGINT, PRIMARY KEY (guild_id, role))")
+    dab.execute("CREATE TABLE IF NOT EXISTS guilds (guild_id INTEGER PRIMARY KEY, prefix TEXT DEFAULT 'cc ', lobby_vc INTEGER, beatkhana INTEGER)")
+    dab.execute("CREATE TABLE IF NOT EXISTS coord_roles (guild_id INTEGER REFERENCES guilds (guild_id) ON DELETE CASCADE, role INTEGER, PRIMARY KEY (guild_id, role))")
+    dab.execute("CREATE TABLE IF NOT EXISTS ignored_roles (guild_id INTEGER REFERENCES guilds (guild_id) ON DELETE CASCADE, role INTEGER, PRIMARY KEY (guild_id, role))")
 
 async def prefix(bot, ctx):
         try:
