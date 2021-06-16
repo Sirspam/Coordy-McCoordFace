@@ -15,7 +15,7 @@ def guild_coord_role_check(): # haha I certainly didn't just steal and slightly 
         raise commands.MissingPermissions("Coordinator Role")
     return commands.check(predicate)
 
-def admin_or_owner_check():
+def admin_or_bot_owner_check():
     async def predicate(ctx):
         if not isinstance(ctx.channel, discord.abc.GuildChannel):
             raise commands.NoPrivateMessage
