@@ -3,6 +3,7 @@ import aiosqlite
 import discord
 import json
 from utils.database_cache import add_to_cache, create_config
+from utils.role_checks import admin_or_bot_owner_check
 from discord.ext import commands
 
 
@@ -29,7 +30,7 @@ class Configuration(commands.Cog):
         logging.info(f"{guild.name} removed from database")
 
     @commands.group(invoke_without_command=True, help="Posts the current configuration")
-    @commands.has_permissions(administrator = True)
+    @admin_or_bot_owner_check()
     async def config(self, ctx):
         logging.info(f"Config invoked in {ctx.guild.name}")
         embed = discord.Embed(title=f"{ctx.guild.name} Config",)
