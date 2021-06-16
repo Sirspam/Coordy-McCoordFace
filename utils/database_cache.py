@@ -1,6 +1,5 @@
 import logging
 import aiosqlite
-import cogs.configuration
 from discord.ext import tasks
 
 cached = list()
@@ -23,7 +22,7 @@ async def add_to_cache(bot, guild):
         async with dab.execute("SELECT * FROM guilds WHERE guild_id = ?", (guild.id,)) as cursor:
             guilds = await cursor.fetchone()
             if guilds is None:
-                await cogs.configuration.create_config(guild)
+                await create_config(guild)
                 return await add_to_cache(bot, guild)
         async with dab.execute("SELECT role FROM coord_roles WHERE guild_id = ?", (guild.id,)) as cursor:
             coord_roles = list()
@@ -33,7 +32,6 @@ async def add_to_cache(bot, guild):
             ignored_roles = list()
             for role in await cursor.fetchall():
                 ignored_roles.append(role[0])
-
     bot.config[guild.id]={
         "prefix": guilds[1],
         "lobby_vc_id": guilds[2],
@@ -41,6 +39,11 @@ async def add_to_cache(bot, guild):
         "coord_roles_ids": coord_roles,
         "ignored_roles_ids": ignored_roles
     }
-    if guild.id in cached:
-        cached.remove(guild.id)
     cached.append(guild.id)
+
+async def create_config(guild):
+        logging.info(f"Creating database row for {guild.name}")
+        async with aiosqlite.connect("database.db") as dab:
+            await dab.execute("INSERT INTO guilds (guild_id, prefix) VALUES (?,?)", (guild.id,"cc "))
+            await dab.commit()
+        logging.info(f"{guild.name} added to database")
