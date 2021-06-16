@@ -26,6 +26,19 @@ class QualifiersMenu(menus.ListPageSource):
         )
         return self.embed
 
+class MapPoolMenu(menus.ListPageSource):
+    def __init__(self, data, embed):
+        super().__init__(data, per_page=1)
+        self.embed = embed
+
+    async def format_page(self, menu, entries):
+        self.embed.clear_fields()
+        self.embed.set_footer(text=f"Page {(menu.current_page+1)}/{self.get_max_pages()}")
+        self.embed.add_field(
+            name=entries[0],
+            value=entries[1],
+            inline=True)
+        return self.embed
 
 class BeatKhana(commands.Cog):
     def __init__(self, bot):
@@ -128,24 +141,15 @@ class BeatKhana(commands.Cog):
             url=f"https://beatkhana.com/tournament/{self.bot.config[ctx.guild.id]['beatkhana_id']}/map-pool",
             icon_url=f"https://beatkhana.com/assets/images/{tourney_json_data['image']}"
         )
+        fields = list()
         for pool in pool_json_data:
             message = str()
             for song in pool_json_data[pool]["songs"]:
                 message = f"{message}[{song['name']} - {song['songAuthor']}](https://beatsaver.com/beatmap/{song['key']}) [{song['levelAuthor']}] - **{song['diff']}** ``{song['key']}``\n"
             message = f"{message}\n**[[Download Pool]](https://beatkhana.com/api/download-pool/{pool})**"
-            embed.add_field(
-                name=pool_json_data[pool]["poolName"],
-                value=message,
-                inline=False
-            )
-        try:
-            await ctx.send(embed=embed)
-        except discord.HTTPException:
-            await ctx.send(embed=discord.Embed(
-            title="Uh oh. I couldn't send the map pool embed <:NotLikeAqua:822089498866221076>",
-            description=f"**[Here's a link to BeatKhana's map pool page](https://beatkhana.com/tournament/{self.bot.config[ctx.guild.id]['beatkhana_id']}/map-pool)**\n\nThis was likely caused by the embed going over discord's length cap.\nYou can easily fix this by removing some maps from your map pool <:AquaTroll:845802819634462780>",
-            colour=discord.Colour.red()
-        ))
+            fields.append((pool_json_data[pool]["poolName"], message))
+        pages = menus.MenuPages(source=MapPoolMenu(fields, embed), timeout=30.0, clear_reactions_after=True)
+        await pages.start(ctx)
         logging.info("Successfully concluded beatkhana maps")
 
     @beatkhana.command(help="Gets information on the tournament bracket", aliases=["bracket","b"])
