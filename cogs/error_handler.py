@@ -1,6 +1,7 @@
 import math
 import logging
 import asyncio
+from utils.database_cache import NoDatabase
 from discord import Embed, Colour
 from discord.ext import commands
 
@@ -49,6 +50,10 @@ class ErrorHandler(commands.Cog):
         if isinstance(error, commands.NSFWChannelRequired):
             logging.info("NSFWChannelRequired hander ran")
             return await ctx.reply("How lewd of you <:AYAYAFlushed:822094723199008799>\n``This command can only be ran in an nsfw channel``")
+
+        if isinstance(error, NoDatabase):
+            logging.info("NoDatabase handler ran")
+            return await ctx.reply("This action requires a config!\nUse ``config create`` to make one.")
 
         logging.error(error)
         await ctx.send(embed=Embed(

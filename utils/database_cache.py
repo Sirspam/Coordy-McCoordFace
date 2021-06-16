@@ -1,6 +1,7 @@
 import logging
 import aiosqlite
 from discord.ext import tasks
+from discord.ext.commands.errors import CheckFailure
 
 cached = list()
 
@@ -14,6 +15,9 @@ async def clean_cache():
     logging.info("Successfully cleaned cache")
 clean_cache.start()
 
+class NoDatabase(CheckFailure):
+    pass
+
 async def add_to_cache(bot, guild):
     logging.info(f"Adding {guild.name} to cache")
     if guild.id in bot.config:
@@ -22,8 +26,7 @@ async def add_to_cache(bot, guild):
         async with dab.execute("SELECT * FROM guilds WHERE guild_id = ?", (guild.id,)) as cursor:
             guilds = await cursor.fetchone()
             if guilds is None:
-                await create_config(guild)
-                return await add_to_cache(bot, guild)
+                raise NoDatabase()
         async with dab.execute("SELECT role FROM coord_roles WHERE guild_id = ?", (guild.id,)) as cursor:
             coord_roles = list()
             for role in await cursor.fetchall():
@@ -44,6 +47,6 @@ async def add_to_cache(bot, guild):
 async def create_config(guild):
         logging.info(f"Creating database row for {guild.name}")
         async with aiosqlite.connect("database.db") as dab:
-            await dab.execute("INSERT INTO guilds (guild_id, prefix) VALUES (?,?)", (guild.id,"cc "))
+            await dab.execute("INSERT INTO guilds (guild_id) VALUES (?)", (guild.id,))
             await dab.commit()
         logging.info(f"{guild.name} added to database")
