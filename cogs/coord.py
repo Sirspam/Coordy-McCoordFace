@@ -2,7 +2,7 @@ import logging
 from discord.ext import commands
 from random import getrandbits, choice, randint
 from utils.role_checks import guild_coord_role_check
-from utils.database_cache import add_to_cache
+from utils.database_management import add_to_cache
 
 
 async def member_edit(self, ctx, action_type):

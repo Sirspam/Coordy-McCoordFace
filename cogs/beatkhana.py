@@ -3,7 +3,7 @@ import logging
 import json
 from datetime import datetime
 from discord.ext import commands, menus
-from utils.database_cache import add_to_cache
+from utils.database_management import add_to_cache
 
 class QualifiersMenu(menus.ListPageSource):
     def __init__(self, data, embed):
