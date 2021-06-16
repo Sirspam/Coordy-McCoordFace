@@ -2,6 +2,7 @@ import logging
 from discord.ext import commands
 from random import getrandbits, choice, randint
 from utils.role_checks import guild_coord_role_check
+from utils.database_cache import add_to_cache
 
 
 async def member_edit(self, ctx, action_type):
@@ -42,6 +43,9 @@ class Coord(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+
+    async def cog_before_invoke(self, ctx):
+        await add_to_cache(self.bot, ctx.guild)
 
     @commands.command(aliases=["m"], help="Mutes users in your vc.")
     @guild_coord_role_check()

@@ -2,17 +2,17 @@ import logging
 import aiosqlite
 import discord
 import json
-import utils.database_cache
+from utils.database_cache import add_to_cache, create_config
 from discord.ext import commands
 
-
-async def call_add_to_cache(self, ctx): # Decorator wouldn't take add_to_cache, so here we are making a function to call another function
-    await utils.database_cache.add_to_cache(self.bot, ctx.guild)
 
 class Configuration(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+
+    async def cog_before_invoke(self, ctx):
+        await add_to_cache(self.bot, ctx.guild)
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
@@ -30,7 +30,6 @@ class Configuration(commands.Cog):
 
     @commands.group(invoke_without_command=True, help="Posts the current configuration")
     @commands.has_permissions(administrator = True)
-    @commands.before_invoke(call_add_to_cache)
     async def config(self, ctx):
         logging.info(f"Config invoked in {ctx.guild.name}")
         embed = discord.Embed(title=f"{ctx.guild.name} Config",)
@@ -78,7 +77,6 @@ class Configuration(commands.Cog):
         logging.info("config concluded")
 
     @config.command(help="Posts the current configuration in a raw format")
-    @commands.before_invoke(call_add_to_cache)
     async def raw(self, ctx):
         logging.info(f"config raw invoked in {ctx.guild.name}")
         await ctx.send(self.bot.config[ctx.guild.id])
@@ -99,7 +97,6 @@ class Configuration(commands.Cog):
         await ctx.message.add_reaction("✅")
 
     @config.command(help="Sets the bot's prefix for this guild")
-    @commands.before_invoke(call_add_to_cache)
     async def set_prefix(self, ctx, *, prefix):
         logging.info(f"Recieved set_prefix {prefix} in {ctx.guild.name}")
         if prefix[:1]!='"' or prefix[-1:]!='"':
@@ -112,7 +109,6 @@ class Configuration(commands.Cog):
         logging.info("Prefix set")
 
     @config.command(help="Sets the lobby vc id for this guild")
-    @commands.before_invoke(call_add_to_cache)
     async def set_lobby(self, ctx, lobby_id: int):
         logging.info(f"Recieved set_lobby {lobby_id} in {ctx.guild.name}")
         channel_object = ctx.guild.get_channel(lobby_id)
@@ -126,7 +122,6 @@ class Configuration(commands.Cog):
         logging.info("lobby vc id set")
 
     @config.command(help="Sets the coordinator roles for this guild")
-    @commands.before_invoke(call_add_to_cache)
     async def set_coords(self, ctx, *roles: int):
         logging.info(f"Recieved set_coords {roles} in {ctx.guild.name}")
         for role in roles:
@@ -142,7 +137,6 @@ class Configuration(commands.Cog):
         logging.info("coord roles set")
 
     @config.command(help="Sets the ignored roles for this guild")
-    @commands.before_invoke(call_add_to_cache)
     async def set_ignored(self, ctx, *roles: int):
         logging.info(f"Recieved set_ignored {roles} in {ctx.guild.name}")
         for role in roles:
@@ -159,7 +153,6 @@ class Configuration(commands.Cog):
         logging.info("ignored roles set")
 
     @config.command(help="Sets the ignored roles for this guild")
-    @commands.before_invoke(call_add_to_cache)
     async def set_beatkhana(self, ctx, beatkhana_id: int):
         logging.info(f"Recieved set_beatkhana {beatkhana_id} in {ctx.guild.name}")
         async with self.bot.session.get(f"https://beatkhana.com/api/tournament/{beatkhana_id}") as resp:
@@ -175,9 +168,3 @@ class Configuration(commands.Cog):
 def setup(bot):
     bot.add_cog(Configuration(bot))
 
-async def create_config(guild):
-        logging.info(f"Creating database row for {guild.name}")
-        async with aiosqlite.connect("database.db") as dab:
-            await dab.execute("INSERT INTO guilds (guild_id, prefix) VALUES (?,?)", (guild.id,"cc "))
-            await dab.commit()
-        logging.info(f"{guild.name} added to database")

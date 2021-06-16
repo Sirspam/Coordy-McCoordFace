@@ -3,6 +3,7 @@ import logging
 import json
 from datetime import datetime
 from discord.ext import commands, menus
+from utils.database_cache import add_to_cache
 
 class QualifiersMenu(menus.ListPageSource):
     def __init__(self, data, embed):
@@ -30,6 +31,8 @@ class BeatKhana(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    async def cog_before_invoke(self, ctx):
+        await add_to_cache(self.bot, ctx.guild)
 
     @commands.group(invoke_without_command=True, help="Gets information on a user from BeatKhana!", aliases=["bk"])
     async def beatkhana(self, ctx, user:discord.User):
