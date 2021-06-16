@@ -23,8 +23,9 @@ async def add_to_cache(bot, guild):
         async with dab.execute("SELECT * FROM guilds WHERE guild_id = ?", (guild.id,)) as cursor:
             guilds = await cursor.fetchone()
             if guilds is None:
-                await create_config
-                return await add_to_cache
+                logging.info("Guild not in database!")
+                await create_config(guild)
+                return await add_to_cache(bot, guild)
         async with dab.execute("SELECT role FROM coord_roles WHERE guild_id = ?", (guild.id,)) as cursor:
             coord_roles = list()
             for role in await cursor.fetchall():
