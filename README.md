@@ -95,7 +95,7 @@ Not necessarily needed for the bot to function.
 | Command | Alias | Description |
 | --- | --- | --- |
 | waifu | wa | Posts a waifu. |
-| neko |  | Posts a neko. |
+| neko | nya | Posts a neko. |
 
 ## Hosting Coordy McCoordFace
 * Download the master branch.

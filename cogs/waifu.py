@@ -25,7 +25,7 @@ class Waifu(commands.Cog, command_attrs=dict(hidden=True)):
         logging.info("attachment sent")
 
     @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.command(help="Posts a neko")
+    @commands.command(aliases=["nya"], help="Posts a neko")
     async def neko(self, ctx):
         logging.info(f"neko invoked")
         async with ctx.channel.typing():
@@ -48,4 +48,4 @@ async def get_image(self, endpoint):
         logging.info(json_data["url"])
         async with self.bot.session.get(json_data["url"]) as resp:
             root, ext = splitext(json_data["url"])
-            return (io.BytesIO(await resp.read()),ext)
+            return (io.BytesIO(await resp.read()), ext, link)
