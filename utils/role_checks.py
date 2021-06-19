@@ -10,7 +10,7 @@ def guild_coord_role_check(): # haha I certainly didn't just steal and slightly 
         if ctx.author.guild_permissions.administrator is True:
             return True
         getter = partial(discord.utils.get, ctx.author.roles)
-        if any(getter(id=item) is not None if isinstance(item, int) else getter(name=item) is not None for item in ctx.bot.config[str(ctx.guild.id)]["coord_roles_ids"]):
+        if any(getter(id=item) is not None if isinstance(item, int) else getter(name=item) is not None for item in ctx.bot.config[ctx.guild.id]["coord_roles_ids"]):
             return True
         raise commands.MissingPermissions("Coordinator Role")
     return commands.check(predicate)
