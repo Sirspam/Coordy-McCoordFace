@@ -3,7 +3,7 @@
 
 Coordy McCoordFace is a discord bot I've made to help assist in the coordination of Beat Saber tournaments.
 
-[Invite Link](https://discord.com/oauth2/authorize?client_id=813699805150838795&permissions=29666368&scope=bot) (Currently not hosted 24/7. it's recommended to locally host it yourself.)
+[Invite Link](https://discord.com/api/oauth2/authorize?client_id=813699805150838795&permissions=29748288&scope=bot) (Currently not hosted 24/7. it's recommended to locally host it yourself.)
 
 [Support Server](https://discord.gg/dWX6fpGUK9)
 
