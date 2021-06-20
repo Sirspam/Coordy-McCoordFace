@@ -1,16 +1,17 @@
-import discord
-import os
 import logging
-import aiohttp
-import asyncio
-from discord.ext import commands
-from dotenv import load_dotenv
+from asyncio import get_event_loop
+from os import getcwd, getenv
 from sqlite3 import connect
 
+from discord import Intents, AllowedMentions
+from aiohttp import ClientSession
+from dotenv import load_dotenv
+
+from discord.ext.commands import Bot
 
 logging.basicConfig(format='%(asctime)s:%(levelname)s:%(name)s: %(message)s', level=logging.INFO)
 
-load_dotenv(os.getcwd()+"/.env")
+load_dotenv(getcwd()+"/.env")
 
 with connect("database.db") as dab:
     dab.execute("CREATE TABLE IF NOT EXISTS guilds (guild_id INTEGER PRIMARY KEY, prefix TEXT DEFAULT 'cc ', lobby_vc INTEGER, beatkhana INTEGER)")
@@ -23,13 +24,10 @@ async def prefix(bot, ctx):
         except KeyError:
             return "cc "
 
-
-intents = discord.Intents.default()
+intents = Intents.default()
 intents.members = True
-bot = commands.Bot(command_prefix=prefix, max_messages = None, intents=intents, case_insensitive=True, allowed_mentions=discord.AllowedMentions(replied_user=False))
-bot.session = aiohttp.ClientSession(loop=asyncio.get_event_loop(), headers={"User-Agent": "Coordy McCoordFace (https://github.com/Sirspam/Coordy-McCoordFace)"})
+bot = Bot(command_prefix=prefix, max_messages = None, intents=intents, case_insensitive=True, allowed_mentions=AllowedMentions(replied_user=False))
 bot.config = dict()
-
 
 initial_cogs = [
     "jishaku",
@@ -39,7 +37,8 @@ initial_cogs = [
     "cogs.coord",
     "cogs.error_handler",
     "cogs.general",
-    "cogs.waifu"
+    "cogs.waifu",
+    "utils.database_management" # Not really a cog but needed for task loop
 ]
 
 for cog in initial_cogs:
@@ -52,7 +51,8 @@ for cog in initial_cogs:
 
 @bot.event
 async def on_ready():
+    bot.session = ClientSession(loop=get_event_loop(), headers={"User-Agent": "Coordy McCoordFace (https://github.com/Sirspam/Coordy-McCoordFace)"})
     logging.info(f"Bot has successfully launched as {bot.user}")
 
 
-bot.run(os.getenv("TOKEN"))
+bot.run(getenv("TOKEN"))

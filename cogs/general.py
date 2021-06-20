@@ -1,7 +1,9 @@
-import discord
 import logging
+
+from discord import Embed, File
 from io import StringIO
 from datetime import datetime
+
 from discord.errors import NotFound
 from discord.ext import commands
 
@@ -11,37 +13,37 @@ class General(commands.Cog):
         self.bot = bot
 
 
+    async def cog_before_invoke(self, ctx):
+        logging.info(f"Invoked {ctx.command} in {ctx.guild.name} by {ctx.author.name}\nArgs: {ctx.args}" )
+
+    async def cog_after_invoke(self, ctx):
+        logging.info(f"Concluded {ctx.command}")
+
+
     @commands.command(aliases=["link"], help="Links relevant for the bot")
     async def links(self, ctx):
-        logging.info(f'Recieved link in {ctx.guild.name}')
-        embed = discord.Embed(
+        embed = Embed(
             description="[Bot Invite Link](https://discord.com/api/oauth2/authorize?client_id=813699805150838795&permissions=29748288&scope=bot)\n[Home Server](https://discord.gg/dWX6fpGUK9)\n[Github Repo](https://github.com/Sirspam/Coordy-McCoordFace)\n\nI hope you're having a good day :)",
             color=0x00A9E0)
         embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/787809230639202354.png?v=1")
         await ctx.send(embed=embed)
-        logging.info(f'Link embed sent')
 
     @commands.command(aliases=["nick"], help="Changes the bot's nickname")
     @commands.has_permissions(administrator = True)
     async def nickname(self, ctx, *, arg):
-        logging.info(f"Recieved nickname in {ctx.guild.name} from {ctx.author.name}")
         if arg == "None":
             await ctx.guild.me.edit(nick=None)
             return logging.info(f"Nickname successfully reverted to default")
         await ctx.guild.me.edit(nick=arg)
-        return logging.info(f"Nickname successfully changed to: {arg}")
 
     @commands.command(help="Makes the bot leave the guild")
     @commands.has_permissions(administrator = True)
     async def leave(self, ctx):
-        logging.info(f"Recieved leave in {ctx.guild.name} from {ctx.author.name}")
         await ctx.guild.leave()
-        logging.info(f"Successfully left the guild")
 
     @commands.command(help="Parses the TA bot leaderboard to a txt file")
     @commands.has_permissions(administrator = True)
     async def ta_to_txt(self, ctx, message_id: int):
-        logging.info(f"ta_to_txt invoked in {ctx.guild.name}")
         try:
             message = await ctx.fetch_message(message_id)
         except NotFound:
@@ -71,8 +73,7 @@ class General(commands.Cog):
         for player in scores:
             result = result+f"#{iteration}, {player}, {str(scores[player])[1:-1]}\n"
             iteration = iteration+1
-        await ctx.reply(file=discord.File(StringIO(str(result)),f"{ctx.guild.name} {datetime.now()}.txt"))
-        logging.info("ta_to_txt concluded")
+        await ctx.reply(file=File(StringIO(str(result)),f"{ctx.guild.name} {datetime.now()}.txt"))
 
 
 def setup(bot):

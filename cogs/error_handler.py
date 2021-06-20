@@ -1,7 +1,9 @@
-import math
 import logging
-import asyncio
+from math import ceil
+from asyncio import sleep
+
 from discord import Embed, Colour
+
 from discord.ext import commands
 
 
@@ -12,6 +14,7 @@ class ErrorHandler(commands.Cog):
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         logging.info(f"on_command_error triggered")
+        print(error)
         
         if hasattr(ctx.command, "on_error"):
             return
@@ -34,8 +37,8 @@ class ErrorHandler(commands.Cog):
 
         if isinstance(error, commands.CommandOnCooldown):
             logging.info("CommandOnCooldown handler ran")
-            message = await ctx.send(f"Command on cooldown, ``{math.ceil(error.retry_after)} seconds``")
-            await asyncio.sleep(int(math.ceil(error.retry_after)))
+            message = await ctx.send(f"Command on cooldown, ``{ceil(error.retry_after)} seconds``")
+            await sleep(int(ceil(error.retry_after)))
             return await message.add_reaction("✅")
 
         if isinstance(error, commands.MissingRequiredArgument):
@@ -45,10 +48,6 @@ class ErrorHandler(commands.Cog):
         if isinstance(error, commands.MissingPermissions):
             logging.info("MissingPermissions handler ran")
             return await ctx.send("You don't have the permissions for this command.")
-        
-        if isinstance(error, commands.NSFWChannelRequired):
-            logging.info("NSFWChannelRequired hander ran")
-            return await ctx.reply("How lewd of you <:AYAYAFlushed:822094723199008799>\n``This command can only be ran in an nsfw channel``")
 
 
         logging.error(error)

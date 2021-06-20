@@ -1,9 +1,12 @@
-import discord
 import logging
-import json
+from json import loads, JSONDecodeError
 from datetime import datetime
+
+from discord import User, Embed
+
 from discord.ext import commands, menus
 from utils.database_management import add_to_cache
+
 
 class QualifiersMenu(menus.ListPageSource):
     def __init__(self, data, embed):
@@ -44,19 +47,27 @@ class BeatKhana(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    async def cog_before_invoke(self, ctx):
+
+    async def cog_check(self, ctx):
         await add_to_cache(self.bot, ctx.guild)
+        return True
+
+    async def cog_before_invoke(self, ctx):
+        logging.info(f"Invoked {ctx.command} in {ctx.guild.name} by {ctx.author.name}\nArgs: {ctx.args}" )
+
+    async def cog_after_invoke(self, ctx):
+        logging.info(f"Concluded {ctx.command}")
+
 
     @commands.group(invoke_without_command=True, help="Gets information on a user from BeatKhana!", aliases=["bk"])
-    async def beatkhana(self, ctx, user:discord.User):
-        logging.info(f"beatkhana invoked with {user} in {ctx.guild.name}")
+    async def beatkhana(self, ctx, user:User):
         async with ctx.channel.typing():
             async with self.bot.session.get(f"https://beatkhana.com/api/user/{user.id}") as resp:
                 try:
-                    json_data = json.loads(await resp.text())
-                except json.JSONDecodeError:
+                    json_data = loads(await resp.text())
+                except JSONDecodeError:
                     return await ctx.send("Failed to decode json response. This likely means the user isn't registered on BeatKhana!")
-            embed=discord.Embed(
+            embed=Embed(
                 description=json_data["pronoun"],
                 colour=0xc8825a
             )
@@ -86,15 +97,13 @@ class BeatKhana(commands.Cog):
                 inline=False
             )
         await ctx.reply(embed=embed)
-        logging.info("successfully concluded beatkhana")
 
     @beatkhana.command(help="Gets general information on the tournament", aliases=["tourney","t"])
     async def tournament(self, ctx):
-        logging.info(f"beatkhana tournament invoked in {ctx.guild.name}")
         async with ctx.channel.typing():
             async with self.bot.session.get(f"https://beatkhana.com/api/tournament/{self.bot.config[ctx.guild.id]['beatkhana_id']}") as resp:
-                json_data = json.loads(await resp.text())[0]
-            embed = discord.Embed(colour=0xc8825a)
+                json_data = loads(await resp.text())[0]
+            embed = Embed(colour=0xc8825a)
             embed.set_author(
                 name=f"{json_data['name']} Tournament",
                 url=f"https://beatkhana.com/tournament/{self.bot.config[ctx.guild.id]['beatkhana_id']}",
@@ -125,17 +134,15 @@ class BeatKhana(commands.Cog):
                 inline=True
             )
             await ctx.send(embed=embed)
-        logging.info("Successfully concluded beatkhana tournament")
 
     @beatkhana.command(help="Gets information on the tournament map pool", aliases=["map","m"])
     async def maps(self, ctx):
-        logging.info(f"beatkhana maps invoked in {ctx.guild.name}")
         async with ctx.channel.typing():
             async with self.bot.session.get(f"https://beatkhana.com/api/tournament/{self.bot.config[ctx.guild.id]['beatkhana_id']}") as resp:
-                tourney_json_data = json.loads(await resp.text())[0]
+                tourney_json_data = loads(await resp.text())[0]
             async with self.bot.session.get(f"https://beatkhana.com/api/tournament/{self.bot.config[ctx.guild.id]['beatkhana_id']}/map-pools") as resp:
-                pool_json_data = json.loads(await resp.text())
-        embed=discord.Embed(colour=0xc8825a)
+                pool_json_data = loads(await resp.text())
+        embed=Embed(colour=0xc8825a)
         embed.set_author(
             name=f"{tourney_json_data['name']} Map Pools",
             url=f"https://beatkhana.com/tournament/{self.bot.config[ctx.guild.id]['beatkhana_id']}/map-pool",
@@ -150,37 +157,33 @@ class BeatKhana(commands.Cog):
             fields.append((pool_json_data[pool]["poolName"], message))
         pages = menus.MenuPages(source=MapPoolMenu(fields, embed), timeout=30.0, clear_reactions_after=True)
         await pages.start(ctx)
-        logging.info("Successfully concluded beatkhana maps")
 
     @beatkhana.command(help="Gets information on the tournament bracket", aliases=["bracket","b"])
     async def brackets(self, ctx):
-        logging.info(f"beatkhana brackets invoked in {ctx.guild.name}")
         async with ctx.channel.typing():
             async with self.bot.session.get(f"https://beatkhana.com/api/tournament/{self.bot.config[ctx.guild.id]['beatkhana_id']}") as resp:
-                tourney_json_data = json.loads(await resp.text())[0]
+                tourney_json_data = loads(await resp.text())[0]
             # async with self.bot.session.get(f"https://beatkhana.com/api/tournament/{self.bot.config[ctx.guild.id]['beatkhana_id']}/bracket") as resp:
-            #     pool_json_data = json.loads(await resp.text())
-        embed=discord.Embed(colour=0xc8825a)
+            #     pool_json_data = loads(await resp.text())
+        embed=Embed(colour=0xc8825a)
         embed.set_author(
             name=f"{tourney_json_data['name']} Brackets",
             url=f"https://beatkhana.com/tournament/{self.bot.config[ctx.guild.id]['beatkhana_id']}/bracket",
             icon_url=f"https://beatkhana.com/assets/images/{tourney_json_data['image']}"
         )
         await ctx.send(embed=embed)
-        logging.info("Successfully cncluded beatkhana brackets")
 
     @beatkhana.command(help="Gets information on the tournament qualifiers", aliases=["quals","q"])
     async def qualifiers(self, ctx):
-        logging.info(f"beakthana qualifiers invoked in {ctx.guild.name}")
         async with ctx.channel.typing():
             async with self.bot.session.get(f"https://beatkhana.com/api/tournament/{self.bot.config[ctx.guild.id]['beatkhana_id']}/qualifiers") as resp:
-                qualifiers_json_data = json.loads(await resp.text())
+                qualifiers_json_data = loads(await resp.text())
             if not qualifiers_json_data:
                 logging.info("tournament doesn't have qualifier page")
                 return await ctx.send("This tournament doesn't have a qualifier page!")
             async with self.bot.session.get(f"https://beatkhana.com/api/tournament/{self.bot.config[ctx.guild.id]['beatkhana_id']}") as resp:
-                tourney_json_data = json.loads(await resp.text())[0]
-        embed=discord.Embed(colour=0xc8825a, timestamp=ctx.message.created_at)
+                tourney_json_data = loads(await resp.text())[0]
+        embed=Embed(colour=0xc8825a, timestamp=ctx.message.created_at)
         embed.set_author(
             name=f"{tourney_json_data['name']} Qualifiers",
             url=f"https://beatkhana.com/tournament/{self.bot.config[ctx.guild.id]['beatkhana_id']}/qualifiers",
@@ -195,17 +198,15 @@ class BeatKhana(commands.Cog):
         players.sort(key=lambda a: a[1],reverse=True)
         pages = menus.MenuPages(source=QualifiersMenu(players, embed), timeout=30.0, clear_reactions_after=True)
         await pages.start(ctx)
-        logging.info("Successfully concluded beatkhana qualifiers")
 
     @beatkhana.command(help="Gets information on the tournament staff", aliases=["s"])
     async def staff(self, ctx):
-        logging.info(f"beatkhana staff invoked in {ctx.guild.name}")
         async with ctx.channel.typing():
             async with self.bot.session.get(f"https://beatkhana.com/api/tournament/{self.bot.config[ctx.guild.id]['beatkhana_id']}") as resp:
-                tourney_json_data = json.loads(await resp.text())[0]
+                tourney_json_data = loads(await resp.text())[0]
             async with self.bot.session.get(f"https://beatkhana.com/api/tournament/{self.bot.config[ctx.guild.id]['beatkhana_id']}/staff") as resp:
-                staff_json_data = json.loads(await resp.text())
-        embed=discord.Embed(colour=0xc8825a)
+                staff_json_data = loads(await resp.text())
+        embed=Embed(colour=0xc8825a)
         embed.set_author(
             name=f"{tourney_json_data['name']} Staff",
             url=f"https://beatkhana.com/tournament/{self.bot.config[ctx.guild.id]['beatkhana_id']}/staff",
@@ -221,7 +222,6 @@ class BeatKhana(commands.Cog):
                 inline=True
             )
         await ctx.send(embed=embed)
-        logging.info("Successfully concluded beatkhana staff")
 
 
 def setup(bot):

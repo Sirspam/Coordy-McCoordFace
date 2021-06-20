@@ -1,8 +1,10 @@
-import discord
-import json
 import logging
-from discord.ext import commands
+from json import loads
+
+from discord import Embed
 from datetime import datetime
+
+from discord.ext import commands
 
 
 diff_emotes = { # Emotes from sus
@@ -28,6 +30,13 @@ class BeatSaver(commands.Cog):
         self.bot = bot
 
 
+    async def cog_before_invoke(self, ctx):
+        logging.info(f"Invoked {ctx.command} in {ctx.guild.name} by {ctx.author.name}\nArgs: {ctx.args}" )
+
+    async def cog_after_invoke(self, ctx):
+        logging.info(f"Concluded {ctx.command}")
+
+
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(aliases=["bs","bsr"])
     async def beatsaver(self, ctx, key, diff=None):
@@ -36,7 +45,7 @@ class BeatSaver(commands.Cog):
             async with self.bot.session.get(f"https://beatsaver.com/api/maps/detail/{key}") as resp:
                 if await resp.text() == "Not Found":
                     raise commands.BadArgument
-                response = json.loads(await resp.text())
+                response = loads(await resp.text())
             difficulties = []
             for x in response["metadata"]["difficulties"]:
                 if response["metadata"]["difficulties"][x] is True:
@@ -52,7 +61,7 @@ class BeatSaver(commands.Cog):
             else:
                 title = response["metadata"]["songName"]+" - "+response["metadata"]["songSubName"]
             m, s = divmod(response["metadata"]["duration"], 60)
-            embed = discord.Embed(
+            embed = Embed(
                 title=title,
                 url=f"https://beatsaver.com/beatmap/{key}",
                 description=f"**{response['metadata']['songAuthorName']}**",
@@ -92,11 +101,12 @@ class BeatSaver(commands.Cog):
 
     @beatsaver.error
     async def beatsaver_error(self, ctx, error):
+        # The local error handler seems to print the errors and I'm not too sure why :/
         if isinstance (error, commands.BadArgument):
-            await ctx.send("You've given a bad argument!\nYou should totally try ``e970`` though <:AYAYATroll:839891422140432405>")
+            return await ctx.send("You've given a bad argument!\nYou should totally try ``e970`` though <:AYAYATroll:839891422140432405>")
         elif isinstance (error, commands.MissingRequiredArgument):
             return await ctx.send("You didn't give a required argument.\nYou should totally try ``e970`` though <:AquaTroll:845802819634462780>")
-        logging.error(error)
+        delattr(ctx.command, "on_error")
 
 
 def setup(bot):

@@ -1,10 +1,12 @@
 import logging
-import aiosqlite
-import discord
-import json
+from json import loads
+
+from aiosqlite import connect
+from discord import Embed, TextChannel
+
+from discord.ext import commands
 from utils.database_management import add_to_cache, create_config
 from utils.role_checks import admin_or_bot_owner_check
-from discord.ext import commands
 
 
 class Configuration(commands.Cog):
@@ -12,8 +14,16 @@ class Configuration(commands.Cog):
         self.bot = bot
 
 
-    async def cog_before_invoke(self, ctx):
+    async def cog_check(self, ctx):
         await add_to_cache(self.bot, ctx.guild)
+        return True
+
+    async def cog_before_invoke(self, ctx):
+        logging.info(f"Invoked {ctx.command} in {ctx.guild.name} by {ctx.author.name}\nArgs: {ctx.args}" )
+
+    async def cog_after_invoke(self, ctx):
+        logging.info(f"Concluded {ctx.command}")
+
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
@@ -24,8 +34,8 @@ class Configuration(commands.Cog):
     @commands.Cog.listener()
     async def on_guild_remove(self, guild):
         logging.info(f"Left {guild.name}")
-        del self.bot.config[str(guild.id)]
-        async with aiosqlite.connect("database.db") as dab:
+        del self.bot.config[guild.id]
+        async with connect("database.db") as dab:
             await dab.execute("DELETE FROM guilds WHERE guild_id=?", (guild.id,))
         logging.info(f"{guild.name} removed from database")
 
@@ -33,7 +43,7 @@ class Configuration(commands.Cog):
     @admin_or_bot_owner_check()
     async def config(self, ctx):
         logging.info(f"Config invoked in {ctx.guild.name}")
-        embed = discord.Embed(title=f"{ctx.guild.name} Config",)
+        embed = Embed(title=f"{ctx.guild.name} Config",)
         embed.add_field(
             name="Prefix",
             value=f"``{self.bot.config[ctx.guild.id]['prefix']}``",
@@ -47,7 +57,7 @@ class Configuration(commands.Cog):
         message=None
         if self.bot.config[ctx.guild.id]["beatkhana_id"] is not None:
             async with self.bot.session.get(f"https://beatkhana.com/api/tournament/{self.bot.config[ctx.guild.id]['beatkhana_id']}") as resp:
-                json_data = json.loads(await resp.text())
+                json_data = loads(await resp.text())
                 message = f"[{json_data[0]['name']}](https://beatkhana.com/tournament/{self.bot.config[ctx.guild.id]['beatkhana_id']})"
         embed.add_field(
             name="BeatKhana Page",
@@ -87,7 +97,7 @@ class Configuration(commands.Cog):
     async def remove(self, ctx):
         logging.info(f"Removing {ctx.guild.name} from config")
         del self.bot.config[ctx.guild.id]
-        async with aiosqlite.connect("database.db") as dab:
+        async with connect("database.db") as dab:
             await dab.execute("PRAGMA foreign_keys = TRUE")
             await dab.execute("DELETE FROM guilds WHERE guild_id=?", (ctx.guild.id,))
             await dab.commit()
@@ -99,7 +109,7 @@ class Configuration(commands.Cog):
         if prefix[:1]!='"' or prefix[-1:]!='"':
             raise commands.BadArgument
         self.bot.config[ctx.guild.id]["prefix"] = prefix.strip('"')
-        async with aiosqlite.connect("database.db") as dab:
+        async with connect("database.db") as dab:
             await dab.execute("UPDATE guilds SET prefix=? WHERE guild_id=?", (prefix, ctx.guild.id))
             await dab.commit()
         await ctx.message.add_reaction("✅")
@@ -109,10 +119,10 @@ class Configuration(commands.Cog):
     async def set_lobby(self, ctx, lobby_id: int):
         logging.info(f"Recieved set_lobby {lobby_id} in {ctx.guild.name}")
         channel_object = ctx.guild.get_channel(lobby_id)
-        if channel_object is None or isinstance(channel_object, discord.TextChannel):
+        if channel_object is None or isinstance(channel_object, TextChannel):
             raise commands.BadArgument
         self.bot.config[ctx.guild.id]["lobby_vc_id"] = lobby_id
-        async with aiosqlite.connect("database.db") as dab:
+        async with connect("database.db") as dab:
             await dab.execute("UPDATE guilds SET lobby_vc=? WHERE guild_id=?", (lobby_id, ctx.guild.id))
             await dab.commit()
         await ctx.message.add_reaction("✅")
@@ -125,7 +135,7 @@ class Configuration(commands.Cog):
             if ctx.guild.get_role(role) is None:
                 raise commands.BadArgument
         self.bot.config[ctx.guild.id]["coord_roles_ids"] = list()
-        async with aiosqlite.connect("database.db") as dab:
+        async with connect("database.db") as dab:
             for role in roles:
                 self.bot.config[ctx.guild.id]["coord_roles_ids"].append(role)
                 await dab.execute("INSERT INTO coord_roles (guild_id, role) VALUES (?,?)", (ctx.guild.id, role))
@@ -140,7 +150,7 @@ class Configuration(commands.Cog):
             if ctx.guild.get_role(role) is None:
                 raise commands.BadArgument
         self.bot.config[ctx.guild.id]["ignored_roles_ids"] = list()
-        async with aiosqlite.connect("database.db") as dab:
+        async with connect("database.db") as dab:
             await dab.execute("DELETE FROM ignored_roles WHERE guild_id=?", (ctx.guild.id,))
             for role in roles:
                 self.bot.config[ctx.guild.id]["ignored_roles_ids"].append(role)
@@ -156,7 +166,7 @@ class Configuration(commands.Cog):
             if "Tournament Not Found" in await resp.text():
                 raise commands.BadArgument
         self.bot.config[ctx.guild.id]["beatkhana_id"] = beatkhana_id
-        async with aiosqlite.connect("database.db") as dab:
+        async with connect("database.db") as dab:
             await dab.execute("UPDATE guilds SET beatkhana=? WHERE guild_id=?", (beatkhana_id, ctx.guild.id))
             await dab.commit()
         await ctx.message.add_reaction("✅")
