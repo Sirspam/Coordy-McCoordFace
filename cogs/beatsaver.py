@@ -104,7 +104,7 @@ class BeatSaver(commands.Cog):
         # The local error handler seems to print the errors and I'm not too sure why :/
         if isinstance (error, commands.BadArgument):
             return await ctx.send("You've given a bad argument!\nYou should totally try ``e970`` though <:AYAYATroll:839891422140432405>")
-        elif isinstance (error, commands.MissingRequiredArgument):
+        if isinstance (error, commands.MissingRequiredArgument):
             return await ctx.send("You didn't give a required argument.\nYou should totally try ``e970`` though <:AquaTroll:845802819634462780>")
         delattr(ctx.command, "on_error")
 
