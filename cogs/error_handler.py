@@ -13,7 +13,7 @@ class ErrorHandler(commands.Cog):
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
-        logging.info(f"on_command_error triggered")
+        logging.info(f"ErrorHandler invoked")
         print(error)
         
         if hasattr(ctx.command, "on_error"):

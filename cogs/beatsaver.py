@@ -102,11 +102,15 @@ class BeatSaver(commands.Cog):
     @beatsaver.error
     async def beatsaver_error(self, ctx, error):
         # The local error handler seems to print the errors and I'm not too sure why :/
+        logging.info("beatsaver local error handler invoked")
         if isinstance (error, commands.BadArgument):
+            logging.info("BadArgument handler ran")
             return await ctx.send("You've given a bad argument!\nYou should totally try ``e970`` though <:AYAYATroll:839891422140432405>")
         if isinstance (error, commands.MissingRequiredArgument):
+            logging.info(f"MissingRequiredArgument handler ran. Missing: {error.param.name}")
             return await ctx.send("You didn't give a required argument.\nYou should totally try ``e970`` though <:AquaTroll:845802819634462780>")
-        delattr(ctx.command, "on_error")
+        logging.info("Error unhandled by local handler")
+        return delattr(ctx.command, "on_error")
 
 
 def setup(bot):
