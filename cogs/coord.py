@@ -49,12 +49,6 @@ class Coord(commands.Cog):
         await add_to_cache(self.bot, ctx.guild)
         return True
 
-    async def cog_before_invoke(self, ctx):
-        logging.info(f"Invoked {ctx.command} in {ctx.guild.name} by {ctx.author.name}\nArgs: {ctx.args}" )
-
-    async def cog_after_invoke(self, ctx):
-        logging.info(f"Concluded {ctx.command}")
-
 
     @commands.command(aliases=["m"], help="Mutes users in your vc.")
     @guild_coord_role_check()

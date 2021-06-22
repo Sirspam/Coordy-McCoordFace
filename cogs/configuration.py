@@ -18,12 +18,6 @@ class Configuration(commands.Cog):
         await add_to_cache(self.bot, ctx.guild)
         return True
 
-    async def cog_before_invoke(self, ctx):
-        logging.info(f"Invoked {ctx.command} in {ctx.guild.name} by {ctx.author.name}\nArgs: {ctx.args}" )
-
-    async def cog_after_invoke(self, ctx):
-        logging.info(f"Concluded {ctx.command}")
-
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild):

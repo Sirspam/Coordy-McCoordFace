@@ -30,13 +30,6 @@ class BeatSaver(commands.Cog):
         self.bot = bot
 
 
-    async def cog_before_invoke(self, ctx):
-        logging.info(f"Invoked {ctx.command} in {ctx.guild.name} by {ctx.author.name}\nArgs: {ctx.args}" )
-
-    async def cog_after_invoke(self, ctx):
-        logging.info(f"Concluded {ctx.command}")
-
-
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(aliases=["bs","bsr"])
     async def beatsaver(self, ctx, key, diff=None):

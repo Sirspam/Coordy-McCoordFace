@@ -54,5 +54,13 @@ async def on_ready():
     bot.session = ClientSession(loop=get_event_loop(), headers={"User-Agent": "Coordy McCoordFace (https://github.com/Sirspam/Coordy-McCoordFace)"})
     logging.info(f"Bot has successfully launched as {bot.user}")
 
+@bot.before_invoke
+async def before_invoke(ctx):
+    logging.info(f"Invoked {ctx.command} in {ctx.guild.name} by {ctx.author.name}\nArgs: {ctx.args}" )
+
+@bot.after_invoke
+async def after_invoke(ctx):
+    logging.info(f"Concluded {ctx.command}")
+
 
 bot.run(getenv("TOKEN"))

@@ -52,12 +52,6 @@ class BeatKhana(commands.Cog):
         await add_to_cache(self.bot, ctx.guild)
         return True
 
-    async def cog_before_invoke(self, ctx):
-        logging.info(f"Invoked {ctx.command} in {ctx.guild.name} by {ctx.author.name}\nArgs: {ctx.args}" )
-
-    async def cog_after_invoke(self, ctx):
-        logging.info(f"Concluded {ctx.command}")
-
 
     @commands.group(invoke_without_command=True, help="Gets information on a user from BeatKhana!", aliases=["bk"])
     async def beatkhana(self, ctx, user:User):

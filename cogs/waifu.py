@@ -17,13 +17,6 @@ class Waifu(commands.Cog, command_attrs=dict(hidden=True)):
         self.bot = bot
 
 
-    async def cog_before_invoke(self, ctx):
-        logging.info(f"Invoked {ctx.command} in {ctx.guild.name} by {ctx.author.name}\nArgs: {ctx.args}" )
-
-    async def cog_after_invoke(self, ctx):
-        logging.info(f"Concluded {ctx.command}")
-
-
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.command(aliases=["wa"], help="Posts a waifu")
     async def waifu(self, ctx):

@@ -13,13 +13,6 @@ class General(commands.Cog):
         self.bot = bot
 
 
-    async def cog_before_invoke(self, ctx):
-        logging.info(f"Invoked {ctx.command} in {ctx.guild.name} by {ctx.author.name}\nArgs: {ctx.args}" )
-
-    async def cog_after_invoke(self, ctx):
-        logging.info(f"Concluded {ctx.command}")
-
-
     @commands.command(aliases=["link"], help="Links relevant for the bot")
     async def links(self, ctx):
         embed = Embed(
