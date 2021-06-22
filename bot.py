@@ -26,7 +26,7 @@ async def prefix(bot, ctx):
 
 intents = Intents.default()
 intents.members = True
-bot = Bot(command_prefix=prefix, max_messages = None, intents=intents, case_insensitive=True, allowed_mentions=AllowedMentions(replied_user=False))
+bot = Bot(command_prefix=prefix, help_command=None, max_messages=None, intents=intents, case_insensitive=True, allowed_mentions=AllowedMentions(replied_user=False))
 bot.config = dict()
 
 initial_cogs = [
@@ -37,6 +37,7 @@ initial_cogs = [
     "cogs.coord",
     "cogs.error_handler",
     "cogs.general",
+    "cogs.help",
     "cogs.waifu",
     "utils.database_management" # Not really a cog but needed for task loop
 ]
