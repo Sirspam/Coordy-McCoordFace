@@ -31,16 +31,17 @@ Coordy McCoordFace is a discord bot I've made to help assist in the coordination
 | --- | --- | --- |
 | links |  | Post an embed containing relevant links for the bot. |
 | beatsaver \[key\] \(difficulty\)| bs, bsr | Gets information on a certain beatmap. |
+| beatsaver search \[query\] | map, s | Searches for maps on BeatSaver |
 
 #### BeatKhana! Commands
 | Command | Alias | Description |
 | --- | --- | --- |
 | beatkhana \[mention\] | bk | Gets information on a mentioned user from BeatKhana! |
-| beatkhana tournament | bk tourney, bk t | Gets general information on the tournament |
-| beatkhana maps | bk maps, bk m | Gets information on the tournament map pool |
-| beatkhana brackets | bk bracket, bk b | Gets information on the tournament bracket (WIP) |
-| beakthana qualifiers | bk quals, bk q | Gets information on the tournament qualifiers |
-| beatkhana staff | bk s | Gets information on the tournament staff |
+| beatkhana tournament | tourney, t | Gets general information on the tournament |
+| beatkhana maps | maps, m | Gets information on the tournament map pool |
+| beatkhana brackets | bracket, b | Gets information on the tournament bracket (WIP) |
+| beakthana qualifiers | quals, q | Gets information on the tournament qualifiers |
+| beatkhana staff | s | Gets information on the tournament staff |
 
 ### Coordination Commands
 All of the commands below require the role specified in the coord_roles_ids list or admin privileges. Furthermore, individuals with a role specified in the ignored_roles_ids list will not be affected when these commands are ran, the command author will also be exempt.

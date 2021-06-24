@@ -4,7 +4,7 @@ from json import loads
 from discord import Embed
 from datetime import datetime
 
-from discord.ext import commands
+from discord.ext import commands, menus
 
 
 diff_emotes = { # Emotes from sus
@@ -25,21 +25,54 @@ async def diff_sort(difficulties):
     return [x for _,x in sorted(zip(difficulties,diff_copy))]
 
 
+class SearchMenu(menus.ListPageSource):
+    def __init__(self, data, embed):
+        super().__init__(data, per_page=6)
+        self.embed = embed
+
+    async def format_page(self, menu, entries):
+        self.embed.clear_fields()
+        self.embed.set_footer(text=f"Page {(menu.current_page+1)}/{self.get_max_pages()}")
+        gap_check = True
+        for entry in entries:
+            self.embed.add_field(
+                name=entry[0],
+                value=entry[1],
+                inline=True
+            )
+            if gap_check is True:
+                self.embed.add_field(
+                    name="\u200b",
+                    value="\u200b",
+                    inline=True
+                )
+                gap_check = False
+            else:
+                gap_check = True
+        return self.embed
+
+
 class BeatSaver(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
 
+    async def cog_before_invoke(self, ctx):
+        logging.info(f"Invoked {ctx.command} in {ctx.guild.name} by {ctx.author.name}\nArgs: {ctx.args}" )
+
+    async def cog_after_invoke(self, ctx):
+        logging.info(f"Concluded {ctx.command}")
+
+
     @commands.cooldown(1, 5, commands.BucketType.user)
-    @commands.command(aliases=["bs","bsr"])
+    @commands.group(invoke_without_command=True, aliases=["bs","bsr"])
     async def beatsaver(self, ctx, key, diff=None):
-        logging.info(f"Running beatsaver with {key} as key")
         async with ctx.channel.typing():
             async with self.bot.session.get(f"https://beatsaver.com/api/maps/detail/{key}") as resp:
                 if await resp.text() == "Not Found":
                     raise commands.BadArgument
                 response = loads(await resp.text())
-            difficulties = []
+            difficulties = list()
             for x in response["metadata"]["difficulties"]:
                 if response["metadata"]["difficulties"][x] is True:
                     difficulties.append(x)
@@ -67,7 +100,7 @@ class BeatSaver(commands.Cog):
             )
             embed.add_field(
                 name="BeatSaver Stats",
-                value=f"Key: {response['key']}\nDownloads: {response['stats']['downloads']}\nRating: {int(response['stats']['rating']*100)}%\nUploaded: {(datetime.fromisoformat(response['uploaded'][:-1])).strftime('%Y-%m-%d')}",
+                value=f"🔑: {response['key']}\n💾: {response['stats']['downloads']:,}\n💯: {int(response['stats']['rating']*100)}%\n📅: {(datetime.fromisoformat(response['uploaded'][:-1])).strftime('%Y/%m/%d')}",
                 inline=True
             )
             message=str()
@@ -91,6 +124,52 @@ class BeatSaver(commands.Cog):
             embed.set_image(url="https://beatsaver.com"+response["coverURL"])
             await ctx.reply(embed=embed)
         logging.info("successfully concluded beatsaver")
+
+
+# https://beatsaver.com/api/search/text/0?q=nekopara&?automapper=1
+    @beatsaver.command(aliases=["s", "map"])
+    async def search(self, ctx, *, query):
+        async with ctx.channel.typing():
+            query = query.replace(' ','%20')
+            async with self.bot.session.get(f"https://beatsaver.com/api/search/text/0?q={query}&?automapper=1") as resp:
+                response = loads(await resp.text())
+        embed = Embed(colour=0x232325)
+        embed.set_thumbnail(url="https://beatsaver.com"+response["docs"][0]["coverURL"])
+        embed.set_author(
+            name="BeatSaver Search",
+            url=f"https://beatsaver.com/search?q={query}"
+        )
+        data = list()
+        for result in response["docs"]:
+            if result["metadata"]["songSubName"] == '':
+                title = result["metadata"]["songName"]
+            else:
+                title = result["metadata"]["songName"]+" - "+result["metadata"]["songSubName"]
+            if result['metadata']['levelAuthorName'] == "Beat Sage":
+                author_emote = "🤖"
+            else:
+                author_emote = "🥰"
+            difficulties = list()
+            for x in result["metadata"]["difficulties"]:
+                if result["metadata"]["difficulties"][x] is True:
+                    difficulties.append(x)
+            difficulties = await diff_sort(difficulties)
+            diff_message = str()
+            for difficulty in difficulties:
+                diff_message = f"{diff_message} {diff_emotes[difficulty]}"
+            m, s = divmod(result["metadata"]["duration"], 60)
+            message = f"""🔑 {result['key']}
+            {author_emote} {result['metadata']['levelAuthorName']}
+            💾 {result['stats']['downloads']:,}
+            💯 {int(result['stats']['rating']*100)}%
+            ⏱ {m:02d}:{s:02d}
+            📅 {(datetime.fromisoformat(result['uploaded'][:-1])).strftime('%Y/%m/%d')}
+            {diff_message}
+            [BS Page](https://beatsaver.com/beatmap/{result['key']})"""
+            data.append((title, message))
+        pages = menus.MenuPages(source=SearchMenu(data, embed), clear_reactions_after=True)
+        await pages.start(ctx)
+
 
     @beatsaver.error
     async def beatsaver_error(self, ctx, error):
