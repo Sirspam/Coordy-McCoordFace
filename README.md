@@ -60,7 +60,7 @@ All of the commands below require the role specified in the coord_roles_ids list
 | Command | Alias | Description |
 | --- | --- | --- |
 | coin | flip, coinflip | Flips a coin. |
-| seperator | seperate, sep | Posts a line seperator to help organise match text channels. |
+| seperator \(text\) | seperate, sep | Posts a line seperator to help organise match text channels. Includes text in seperator line if provided.|
 | difference \[TA results\] | diff | Calculates the difference between two players from TA results. |
 | pick_user | p_u | Picks a random person in the author's vc. | 
 | pick_number \[value\] | pick_num, p_n | Picks a random number between 1 and the given argument. | 

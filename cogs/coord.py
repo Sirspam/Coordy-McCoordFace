@@ -173,8 +173,9 @@ class Coord(commands.Cog):
 
     @commands.command(aliases=["seperate","sep"], help="Posts a line seperator to help organise match text channels")
     @guild_coord_role_check()
-    async def seperator(self, ctx):
-        await ctx.send("--------------------------------------------------------------")
+    async def seperator(self, ctx, *, text="--"):
+        await ctx.message.delete()
+        await ctx.send(f"------------------------{text}------------------------")
 
 # RESULTS:
 # 1: AuriRex - 1190357
