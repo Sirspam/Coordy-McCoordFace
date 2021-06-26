@@ -229,7 +229,7 @@ class Coord(commands.Cog):
                         logging.error("JSONDecodeError")
                         return await ctx.send(f"Failed to decode json response for __{user.name}__. This likely means they aren't registered on BeatKhana!")
                     multistream_link = f"{multistream_link}/{json_data['twitchName']}"
-        await ctx.reply(f"<{multistream_link}>\n\nAll of these twitch names were taken from BeatKhana!. If someone has ")
+        await ctx.reply(f"<{multistream_link}>\n\nAll of these twitch names were taken from BeatKhana!. If someone has an invalid name, tell them to correct it on their BeatKhana! profile.")
 
 
 def setup(bot):
