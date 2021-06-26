@@ -1,5 +1,7 @@
+from json.decoder import JSONDecodeError
 import logging
 from random import getrandbits, choice, randint
+from json import loads, JSONDecodeError
 
 from discord.ext import commands
 from utils.role_checks import guild_coord_role_check
@@ -96,7 +98,7 @@ class Coord(commands.Cog):
         lobby_vc_id = self.bot.config[ctx.guild.id]["lobby_vc_id"]
         ignored_roles_ids = self.bot.config[ctx.guild.id]["ignored_roles_ids"]
         if ctx.author.voice is None:
-            logging.info("User not in vc")
+            logging.info("Author not in vc")
             return await ctx.send("You aren't in a voice channel!")
         voice = self.bot.get_channel(ctx.author.voice.channel.id)
         logging.info(f"Moving players in {voice.name}")
@@ -188,6 +190,47 @@ class Coord(commands.Cog):
         if len(splitted) > 3:
             raise commands.BadArgument
         await ctx.send(f"{int((splitted[1].rsplit(' - ',1))[1]) - int((splitted[2].rsplit(' - ',1))[1]):,}")
+
+# https://multistre.am/stream1/stream2
+
+    @commands.command(aliases=["ms"], help="Generates a Multistream link with either mentioned users or users in VC")
+    @guild_coord_role_check()
+    async def multistream(self, ctx, *, users=None):
+        if users is None:
+            logging.info("Users None, getting users from voice channel")
+            users = str()
+            if ctx.author.voice is None:
+                logging.info("Author not in vc")
+                return await ctx.send("You aren't in a voice channel!\nEither join a VC or mention some users.")
+            voice = self.bot.get_channel(ctx.author.voice.channel.id)
+            logging.info(f"Getting users in {voice.name}")
+            for x in voice.members:
+                if x.id == ctx.author.id:
+                    continue
+                member = ctx.guild.get_member(x.id)
+                if self.bot.config[ctx.guild.id]["ignored_roles_ids"]:
+                    for xd in self.bot.config[ctx.guild.id]["ignored_roles_ids"]:
+                        logging.info(f"Checking for ignored role: {xd}")
+                        if xd in str(member.roles):
+                            logging.info(f"{x.name} ignored")
+                            continue
+                        else:
+                            users = f"{users} {x.id}"
+                else:
+                    users = f"{users} {x.id}"
+        users = users.split()
+        multistream_link = "https://multistre.am"
+        for user in users:
+            user = await commands.MemberConverter().convert(ctx, user)
+            async with ctx.channel.typing():
+                async with self.bot.session.get(f"https://beatkhana.com/api/user/{user.id}") as resp:
+                    try:
+                        json_data = loads(await resp.text())
+                    except JSONDecodeError:
+                        logging.error("JSONDecodeError")
+                        return await ctx.send(f"Failed to decode json response for __{user.name}__. This likely means they aren't registered on BeatKhana!")
+                    multistream_link = f"{multistream_link}/{json_data['twitchName']}"
+        await ctx.reply(f"<{multistream_link}>\n\nAll of these twitch names were taken from BeatKhana!. If someone has ")
 
 
 def setup(bot):
