@@ -4,6 +4,7 @@ from os import getcwd, getenv
 from sqlite3 import connect
 
 from discord import Intents, AllowedMentions
+from discord.ext.commands.bot import when_mentioned_or
 from aiohttp import ClientSession
 from dotenv import load_dotenv
 
@@ -20,9 +21,9 @@ with connect("database.db") as dab:
 
 async def prefix(bot, ctx):
         try:
-            return bot.config[str(ctx.guild.id)]["prefix"]
+            return when_mentioned_or(bot.config[str(ctx.guild.id)]["prefix"])(bot, ctx)
         except KeyError:
-            return "cc "
+            return when_mentioned_or("cc ")(bot, ctx)
 
 intents = Intents.default()
 intents.members = True
