@@ -113,7 +113,7 @@ class BeatSaver(commands.Cog):
             )
             embed.add_field(
                 name=f"Difficulty Stats {diff_emotes[diff]}",
-                value=f"NPS: {round(diff_stats['notes']/response['metadata']['duration'],2)}\nNJS: {diff_stats['njs']}\nOffset: {round(diff_stats['njsOffset'],2)}\nNotes: {diff_stats['notes']}\n Bombs: {diff_stats['bombs']}\n Obstacles: {diff_stats['obstacles']}",
+                value=f"NPS: {round(diff_stats['notes']/diff_stats['length'],2)}\nNJS: {diff_stats['njs']}\nOffset: {round(diff_stats['njsOffset'],2)}\nNotes: {diff_stats['notes']}\n Bombs: {diff_stats['bombs']}\n Obstacles: {diff_stats['obstacles']}",
                 inline=True
             )
             embed.add_field(
