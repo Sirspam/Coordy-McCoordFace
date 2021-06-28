@@ -11,7 +11,10 @@ class Help(commands.Cog):
             prefix = self.bot.config[str(ctx.guild.id)]
         except KeyError:
             prefix = "cc "
-        await ctx.reply(f"Prefix for this guild is ``{prefix}``\n\n**Commands Table:**\n<https://github.com/Sirspam/Coordy-McCoordFace/blob/main/README.md#Commands>")
+        await ctx.reply(f"""Prefix for this guild is ``{prefix}``
+
+<https://github.com/Sirspam/Coordy-McCoordFace#readme-index>
+*I'll make a proper help command soon™*""")
 
 
 def setup(bot):
