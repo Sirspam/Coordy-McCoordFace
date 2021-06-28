@@ -8,7 +8,8 @@ Coordy McCoordFace is a discord bot I've made to help assist in the coordination
 [Support Server](https://discord.gg/dWX6fpGUK9)
 
 ## Readme Index
-* [Readme Index](#Readme-Index)
+* [Coordy McCoordFace](#Coordy-McCoordFace)
+* [Readme Index](#Readme-Index) (You're already here!)
 * [Commands](#Commands)
     * [General Commands](#General-Commands)
         * [BeatKhana! Commands](#BeatKhana!-Commands)
@@ -114,3 +115,4 @@ Not necessarily needed for the bot to function.
 * [NBST Spring 2021](https://beatkhana.com/tournament/2147484215)
 * [Beat Sage Royale](https://beatkhana.com/tournament/2147484230)
 * [ATI - Austrian Tournament 1](https://beatkhana.com/tournament/2147484231)
+* [115 Royale](https://beatkhana.com/tournament/2147484236)
