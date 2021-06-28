@@ -6,6 +6,7 @@ from datetime import datetime
 
 from discord.errors import NotFound
 from discord.ext import commands
+from utils.role_checks import admin_or_bot_owner_check
 
 
 class General(commands.Cog):
@@ -22,7 +23,7 @@ class General(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(aliases=["nick"], help="Changes the bot's nickname")
-    @commands.has_permissions(administrator = True)
+    @admin_or_bot_owner_check()
     async def nickname(self, ctx, *, arg):
         if arg == "None":
             await ctx.guild.me.edit(nick=None)
@@ -30,12 +31,12 @@ class General(commands.Cog):
         await ctx.guild.me.edit(nick=arg)
 
     @commands.command(help="Makes the bot leave the guild")
-    @commands.has_permissions(administrator = True)
+    @admin_or_bot_owner_check()
     async def leave(self, ctx):
         await ctx.guild.leave()
 
     @commands.command(help="Parses the TA bot leaderboard to a txt file")
-    @commands.has_permissions(administrator = True)
+    @admin_or_bot_owner_check()
     async def ta_to_txt(self, ctx, message_id: int):
         try:
             message = await ctx.fetch_message(message_id)
