@@ -13,23 +13,31 @@ Coordy McCoordFace is a discord bot I've made to help assist in the coordination
 * [Commands](#Commands)
     * [General Commands](#General-Commands)
         * [BeatKhana! Commands](#BeatKhana!-Commands)
+        * [Super Duper Secret Commands](#Super-Duper-Secret-Commands)
     * [Coordination Commands](#Coordination-Commands)
         * [Voice Channel Management](#Voice-Channel-Management)
         * [Utilities](#Utilities)
     * [Administrator Commands](#Administrator-Commands)
+        * [General Admin Commands](#General-Admin-Commands)
         * [Configuration Commands](#Configuration-Commands)
-        * [Quality of Life Commands](#Quality-of-Life-Commands)
-    * [Super Duper Secret Commands](#Super-Duper-Secret-Commands)
 * [Hosting Coordy McCoordFace](#Setting-up-Coordy-McCoordFace)
 * [Previous Tournaments Coordy Has Been Used In](#Previous-Tournaments-Coordy-Has-Been-Used-In)
 
 
 ## Commands
+The default prefix for Coordy is `CC ` although it can be changed with the [Configuration Commands](#Configuration-Commands).
+If you set a custom prefix but forget it, mentioning the bot also works as a viable prefix. The help command will display the current prefix.
+
+Commands under the [General Commands](#General-Commands) header can be used by anyone
+Commands under the [Coordination Commands](#Coordination-Commands) header can only be used by admins or those with the coordination role / roles specified in the config
+Commands under the [Administrator Commands](#Administrator-Commands) header can only be used by admins
+
 [ ] represents a required parameter while ( ) represents an optional parameter.
 
 ### General Commands
 | Command | Alias | Description |
 | --- | --- | --- |
+| help | | Posts a help message |
 | links |  | Post an embed containing relevant links for the bot. |
 | beatsaver \[key\] \(difficulty\)| bs, bsr | Gets information on a certain beatmap. |
 | beatsaver search \[query\] | map, s | Searches for maps on BeatSaver |
@@ -43,6 +51,12 @@ Coordy McCoordFace is a discord bot I've made to help assist in the coordination
 | beatkhana brackets | bracket, b | Gets information on the tournament bracket (WIP) |
 | beakthana qualifiers | quals, q | Gets information on the tournament qualifiers |
 | beatkhana staff | s | Gets information on the tournament staff |
+
+#### Super Duper Secret Commands
+| Command | Alias | Description |
+| --- | --- | --- |
+| waifu | wa | Posts a waifu. |
+| neko | nya | Posts a neko. |
 
 ### Coordination Commands
 All of the commands below require the role specified in the coord_roles_ids list or admin privileges. Furthermore, individuals with a role specified in the ignored_roles_ids list will not be affected when these commands are ran, the command author will also be exempt.
@@ -70,6 +84,13 @@ All of the commands below require the role specified in the coord_roles_ids list
 ### Administrator Commands
 All of the commands below require admin privileges.
 
+#### General Admin Commands
+| Command | Description |
+| --- | --- |
+| nickname | Changes the bot's nickname to the provided argument. |
+| leave | Makes the bot leave the guild. |
+| ta_to_txt \[message id\] | Parses the TA bot leaderboard to a txt file. Useful for importing the contents into a Google Sheet. |
+
 #### Configuration Commands
 The bot **must** be configured before usage, otherwise the majority of commands won't work correctly.
 Notes:
@@ -86,19 +107,6 @@ Notes:
 | config set_coords \[role IDs\] | Sets the coordinator roles for the guild. |
 | config set_ignored \[role IDs\] | Sets the ignored roles for the guild. |
 
-#### Quality of Life Commands
-Not necessarily needed for the bot to function.
-| Command | Description |
-| --- | --- |
-| nickname | Changes the bot's nickname to the provided argument. |
-| leave | Makes the bot leave the guild. |
-| ta_to_txt \[message id\] | Parses the TA bot leaderboard to a txt file. Useful for importing the contents into a Google Sheet. |
-
-### Super Duper Secret Commands
-| Command | Alias | Description |
-| --- | --- | --- |
-| waifu | wa | Posts a waifu. |
-| neko | nya | Posts a neko. |
 
 ## Hosting Coordy McCoordFace
 * Download the master branch.
