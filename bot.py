@@ -10,9 +10,11 @@ from dotenv import load_dotenv
 
 from discord.ext.commands import Bot
 
+
 logging.basicConfig(format='%(asctime)s:%(levelname)s:%(name)s: %(message)s', level=logging.INFO)
 
 load_dotenv(getcwd()+"/.env")
+default_prefix = getenv("DEFAULT_PREFIX")
 
 with connect("database.db") as dab:
     dab.execute("CREATE TABLE IF NOT EXISTS guilds (guild_id INTEGER PRIMARY KEY, prefix TEXT DEFAULT 'cc ', lobby_vc INTEGER, beatkhana INTEGER)")
@@ -23,7 +25,7 @@ async def prefix(bot, ctx):
         try:
             return when_mentioned_or(bot.config[str(ctx.guild.id)]["prefix"])(bot, ctx)
         except KeyError:
-            return when_mentioned_or("cc ")(bot, ctx)
+            return when_mentioned_or(default_prefix)(bot, ctx)
 
 intents = Intents.default()
 intents.members = True
