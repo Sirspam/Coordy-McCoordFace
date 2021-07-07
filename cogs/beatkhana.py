@@ -113,9 +113,14 @@ class BeatKhana(commands.Cog):
                 value=(datetime.fromisoformat(json_data["endDate"][:-1])).strftime('%Y/%m/%d\n%H:%M UTC'),
                 inline=True
             )
+            message=str()
+            if json_data["discord"]:
+                message = f"[Discord]({json_data['discord']})\n"
+            if json_data['twitchLink']:
+                message = f"{message}[Twitch]({json_data['twitchLink']})"
             embed.add_field(
                 name="Links",
-                value=f"[BeatKhana! Page](https://beatkhana.com/tournament/{json_data['tournamentId']})\n[Discord]({json_data['discord']})\n[Twitch]({json_data['twitchLink']})"
+                value=message
             )
             embed.add_field(
                 name="Tournament Owner",
