@@ -1,5 +1,5 @@
 discord.py==1.7.3
-python-dotenv==0.17.1
-jishaku==2.0.0
+python-dotenv==0.18.0
+jishaku==2.1.0
 aiosqlite==0.17.0
 discord-ext-menus==1.0.0a30+g309c702
