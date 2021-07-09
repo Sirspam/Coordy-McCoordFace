@@ -5,6 +5,7 @@ from asyncio import sleep
 from discord import Embed, Colour
 
 from discord.ext import commands
+from utils import config_checks
 
 
 class ErrorHandler(commands.Cog):
@@ -21,7 +22,8 @@ class ErrorHandler(commands.Cog):
         
         if isinstance(error, commands.BadArgument):
             logging.info("BadArgument handler ran")
-            return await ctx.send(f"You've given a bad argument!\nCheck ``{ctx.prefix}help`` for what arguments you need to give")
+            return await ctx.send(f"""You've given a bad argument!
+Check ``{ctx.prefix}help {ctx.command}`` for what arguments you need to give""")
 
         if isinstance(error, commands.CommandNotFound):
             logging.info("CommandNotFound handler ran")
@@ -49,11 +51,23 @@ class ErrorHandler(commands.Cog):
             logging.info("MissingPermissions handler ran")
             return await ctx.send("You don't have the permissions for this command.")
 
+        # Custom Errors
+        if isinstance(error, config_checks.ConfigBeatKhana):
+            logging.info("config_errors.ConfigBeatKhana ran")
+            return await ctx.send(f"""This command requires a beatkhana tournament to be configured!
+Consider using ``{ctx.prefix}help config set_beatkhana`` """)
+
+        if isinstance(error, config_checks.ConfigLobbyVC):
+            logging.info("config_errors.ConfigLobbyVC ran")
+            return await ctx.send(f"""This command requires a lobby voice channel to be configured!
+Consider using ``{ctx.prefix}help config set_lobby`` """)
 
         logging.error(error)
         await ctx.send(embed=Embed(
             title="Uh oh. Something bad happened <:NotLikeAqua:822089498866221076>",
-            description=f"An unhandled error occured.\nIf this keeps occuring open an [issue report](https://github.com/Sirspam/Coordy-McCoordFace/issues) or go pester Sirspam <:AquaSmile:845802697474441236>\n\n```{error}```",
+            description=f"""An unhandled error occured.
+If this keeps occuring open an [issue report](https://github.com/Sirspam/Coordy-McCoordFace/issues) or go pester Sirspam <:AquaSmile:845802697474441236>\n\n
+```{error}```""",
             colour=Colour.red()
         ))
         return await self.bot.get_channel(841306797985234954).send(embed=Embed(

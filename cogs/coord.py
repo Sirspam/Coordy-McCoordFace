@@ -5,6 +5,7 @@ from json import loads, JSONDecodeError
 from discord.ext import commands
 from utils.role_checks import guild_coord_role_check
 from utils.database_management import add_to_cache
+from utils.config_checks import config_lobby_vc_check
 
 
 async def member_edit(self, ctx, action_type):
@@ -93,6 +94,7 @@ class Coord(commands.Cog):
 
     @commands.command(aliases=["out"], help="Moves users to the lobby vc.")
     @guild_coord_role_check()
+    @config_lobby_vc_check()
     async def move_out(self, ctx):
         lobby_vc_id = self.bot.config[ctx.guild.id]["lobby_vc_id"]
         ignored_roles_ids = self.bot.config[ctx.guild.id]["ignored_roles_ids"]
