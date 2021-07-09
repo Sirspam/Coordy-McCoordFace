@@ -153,7 +153,7 @@ class Configuration(commands.Cog):
         await ctx.message.add_reaction("✅")
         logging.info("ignored roles set")
 
-    @config.command(help="Sets the ignored roles for this guild")
+    @config.command(help="Sets the beatkhana page for this guild")
     async def set_beatkhana(self, ctx, beatkhana_id: int):
         logging.info(f"Recieved set_beatkhana {beatkhana_id} in {ctx.guild.name}")
         async with self.bot.session.get(f"https://beatkhana.com/api/tournament/{beatkhana_id}") as resp:
