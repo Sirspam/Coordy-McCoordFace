@@ -1,12 +1,21 @@
 import logging
 from json import loads, JSONDecodeError
 from datetime import datetime
+from xml import etree
 
 from discord import User, Embed
 
 from discord.ext import commands, menus
 from utils.database_management import add_to_cache
+from utils.config_checks import config_beatkhana_check
 
+
+class TournamentMenu(menus.ListPageSource):
+    def __init__(self, data):
+        super().__init__(data, per_page=1)
+
+    async def format_page(self, menu, entries):
+        return entries
 
 class QualifiersMenu(menus.ListPageSource):
     def __init__(self, data, embed):
@@ -93,6 +102,7 @@ class BeatKhana(commands.Cog):
         await ctx.reply(embed=embed)
 
     @beatkhana.command(help="Gets general information on the tournament", aliases=["tourney","t"])
+    @config_beatkhana_check()
     async def tournament(self, ctx):
         async with ctx.channel.typing():
             async with self.bot.session.get(f"https://beatkhana.com/api/tournament/{self.bot.config[ctx.guild.id]['beatkhana_id']}") as resp:
@@ -132,9 +142,31 @@ class BeatKhana(commands.Cog):
                 value=f"``{json_data['ta_url']}``",
                 inline=True
             )
-            await ctx.send(embed=embed)
+            embed_description = Embed(
+                title="Description",
+                # Might move the below into a dict and for loop within a function 
+                # if something else later on needs to translate html shim sham
+                description=json_data['info'].replace("&nbsp;"," ")\
+                    .replace("&#39;","'")\
+                    .replace("<p>","").replace("</p>","")\
+                    .replace("<strong>","**").replace("</strong>","**")\
+                    .replace("<em>","*").replace("</em>","*")\
+                    .replace("<small>","*").replace("</small>","*")\
+                    .replace("<ul>","").replace("</ul>","")\
+                    .replace("<li>","- ").replace("</li>",""),
+                colour=0xc8825a
+            )
+            embed_description.set_author(
+                name=f"{json_data['name']} Tournament",
+                url=f"https://beatkhana.com/tournament/{self.bot.config[ctx.guild.id]['beatkhana_id']}",
+                icon_url=f"https://beatkhana.com/assets/images/{json_data['image']}"
+            )
+            embeds=[embed, embed_description]
+            pages = menus.MenuPages(source=TournamentMenu(embeds), timeout=30.0, clear_reactions_after=True)
+            await pages.start(ctx)
 
     @beatkhana.command(help="Gets information on the tournament map pool", aliases=["map","m"])
+    @config_beatkhana_check()
     async def maps(self, ctx):
         async with ctx.channel.typing():
             async with self.bot.session.get(f"https://beatkhana.com/api/tournament/{self.bot.config[ctx.guild.id]['beatkhana_id']}") as resp:
@@ -173,6 +205,7 @@ class BeatKhana(commands.Cog):
         await ctx.send(embed=embed)
 
     @beatkhana.command(help="Gets information on the tournament qualifiers", aliases=["quals","q"])
+    @config_beatkhana_check()
     async def qualifiers(self, ctx):
         async with ctx.channel.typing():
             async with self.bot.session.get(f"https://beatkhana.com/api/tournament/{self.bot.config[ctx.guild.id]['beatkhana_id']}/qualifiers") as resp:
@@ -199,6 +232,7 @@ class BeatKhana(commands.Cog):
         await pages.start(ctx)
 
     @beatkhana.command(help="Gets information on the tournament staff", aliases=["s"])
+    @config_beatkhana_check()
     async def staff(self, ctx):
         async with ctx.channel.typing():
             async with self.bot.session.get(f"https://beatkhana.com/api/tournament/{self.bot.config[ctx.guild.id]['beatkhana_id']}") as resp:
