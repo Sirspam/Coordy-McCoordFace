@@ -12,7 +12,7 @@ Coordy McCoordFace is a discord bot I've made to help assist in the coordination
 * [Readme Index](#Readme-Index) (You're already here!)
 * [Commands](#Commands)
     * [General Commands](#General-Commands)
-        * [BeatKhana! Commands](#BeatKhana!-Commands)
+        * [BeatKhana! Commands](#BeatKhana-Commands)
         * [Super Duper Secret Commands](#Super-Duper-Secret-Commands)
     * [Coordination Commands](#Coordination-Commands)
         * [Voice Channel Management](#Voice-Channel-Management)
