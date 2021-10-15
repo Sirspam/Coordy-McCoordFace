@@ -1,3 +1,6 @@
+Coordy McCoordFace has been archived as I no longer want to continue this project. 
+I recommend using [BotKhana](https://github.com/AsoDesu/BotKhana) as an alternative, it has the majority of Coordy's commands in it anyways.
+
 # Coordy McCoordFace
 [![CodeFactor](https://www.codefactor.io/repository/github/sirspam/coordy-mccoordface/badge)](https://www.codefactor.io/repository/github/sirspam/coordy-mccoordface)
 
