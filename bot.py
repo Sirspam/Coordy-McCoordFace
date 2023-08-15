@@ -4,12 +4,10 @@ from os import getcwd, getenv
 from sqlite3 import connect
 
 from discord import Intents, AllowedMentions
-from discord.ext.commands.bot import when_mentioned_or
 from aiohttp import ClientSession
 from dotenv import load_dotenv
 
-from discord.ext.commands import Bot
-
+from discord.ext.commands import Bot, when_mentioned_or
 
 logging.basicConfig(format='%(asctime)s:%(levelname)s:%(name)s: %(message)s', level=logging.INFO)
 
@@ -29,7 +27,19 @@ async def prefix(bot, ctx):
 
 intents = Intents.default()
 intents.members = True
-bot = Bot(command_prefix=prefix, help_command=None, max_messages=None, intents=intents, case_insensitive=True, allowed_mentions=AllowedMentions(replied_user=False))
+bot = Bot(
+    command_prefix=prefix,
+    help_command=None,
+    max_messages=None,
+    intents=intents, 
+    case_insensitive=True, 
+    allowed_mentions=AllowedMentions(
+        everyone=False,
+        roles=False,
+        replied_user=False
+    )
+)
+
 bot.config = dict()
 
 initial_cogs = [
@@ -60,7 +70,7 @@ async def on_ready():
 
 @bot.before_invoke
 async def before_invoke(ctx):
-    logging.info(f"Invoked {ctx.command} in {ctx.guild.name} by {ctx.author.name}\nArgs: {ctx.args}" )
+    logging.info(f"Invoked {ctx.command} in {ctx.guild.name} by {ctx.author.name}\nArgs: {ctx.args}")
 
 @bot.after_invoke
 async def after_invoke(ctx):

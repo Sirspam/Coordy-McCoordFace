@@ -2,7 +2,7 @@ import logging
 from json import loads
 
 from aiosqlite import connect
-from discord import Embed, TextChannel
+from discord import Embed, TextChannel, VoiceChannel, Colour
 
 from discord.ext import commands
 from utils.database_management import add_to_cache, create_config
@@ -37,7 +37,10 @@ class Configuration(commands.Cog):
     @admin_or_bot_owner_check()
     async def config(self, ctx):
         logging.info(f"Config invoked in {ctx.guild.name}")
-        embed = Embed(title=f"{ctx.guild.name} Config",)
+        embed = Embed(
+            title=f"{ctx.guild.name} Config",
+            colour=Colour.light_grey()
+        )
         embed.add_field(
             name="Prefix",
             value=f"``{self.bot.config[ctx.guild.id]['prefix']}``",
@@ -52,12 +55,11 @@ class Configuration(commands.Cog):
         if self.bot.config[ctx.guild.id]["beatkhana_id"] is not None:
             async with self.bot.session.get(f"https://beatkhana.com/api/tournament/{self.bot.config[ctx.guild.id]['beatkhana_id']}") as resp:
                 json_data = loads(await resp.text())
-                message = f"[{json_data[0]['name']}](https://beatkhana.com/tournament/{self.bot.config[ctx.guild.id]['beatkhana_id']})"
-        embed.add_field(
-            name="BeatKhana Page",
-            value=message,
-            inline=False
-        )
+                embed.add_field(
+                    name="BeatKhana Page",
+                    value=f"[{json_data[0]['name']}](https://beatkhana.com/tournament/{self.bot.config[ctx.guild.id]['beatkhana_id']})",
+                    inline=False
+                )
         message = str()
         for role in self.bot.config[ctx.guild.id]["coord_roles_ids"]:
             message = f"{message}{(ctx.guild.get_role(role)).mention} "
@@ -97,6 +99,88 @@ class Configuration(commands.Cog):
             await dab.commit()
         await ctx.message.add_reaction("✅")
 
+    @config.command(help="Attempts to automatically setup config")
+    async def auto(self, ctx):
+        typical_names = {
+            "lobby_vc": ["lobby", "waiting room"],
+            "coordinator_roles": ["coordinator", "staff"],
+            "ignored_roles": ["caster", "spectator"]
+        }
+        results = {
+            "Lobby VC": (False, "Not Found"),
+            "BeatKhana Page": (False, "Not Found"),
+            "Coordinator Roles": (False, "Not Found"),
+            "Ignored Roles": (False, "Not Found")
+        }
+        async with ctx.channel.typing():
+            logging.info("Attempting to find lobby_vc")
+            for channel in ctx.guild.channels:
+                if isinstance(channel, VoiceChannel) and channel.name.lower() in typical_names["lobby_vc"]:
+                    logging.info(f"Using {channel.name}")
+                    results["Lobby VC"] = (True, channel.id)
+                    break
+            logging.info("Attempting to find coordinator and ignored roles")
+            coord_ids = list()
+            ignored_ids = list()
+            for role in ctx.guild.roles:
+                if role.name.lower() in typical_names["coordinator_roles"]:
+                    logging.info(f"Appending {role.name} to coord list")
+                    coord_ids.append(role.id)
+                if role.name.lower() in typical_names["ignored_roles"]:
+                    logging.info(f"Appending {role.name} to ignored list")
+                    ignored_ids.append(role.id)
+            if coord_ids:
+                results["Coordinator Roles"] = (True, coord_ids)
+            if ignored_ids:
+                results["Ignored Roles"] = (True, ignored_ids)
+            del coord_ids, ignored_ids # Because this'll certainly save tons of space in the memory! :tf:
+            logging.info("Attempting to find beatkhana page")
+            async with self.bot.session.get(f"https://beatkhana.com/api/tournaments") as resp:
+                for tournament in loads(await resp.text()):
+                    if tournament["name"].lower() == ctx.guild.name.lower():
+                        logging.info(f"Using {tournament['name']}")
+                        results["BeatKhana Page"] = (True, tournament["tournamentId"])
+            if results["BeatKhana Page"][0] is False:
+                logging.info("No main tournament found. Checking mini-tournaments")
+                async with self.bot.session.get(f"https://beatkhana.com/api/mini-tournaments") as resp:
+                    for tournament in loads(await resp.text()):
+                        if tournament["name"].lower() == ctx.guild.name.lower():
+                            logging.info(f"Using {tournament['name']}")
+                            results["BeatKhana Page"] = (True, tournament["tournamentId"])
+            # I don't like this but I can't think of a better way to do it :(
+            async with connect("database.db") as dab:
+                if results["Lobby VC"][0] is True:
+                    self.bot.config[ctx.guild.id]["lobby_vc_id"] = results["Lobby VC"][1]
+                    await dab.execute("UPDATE guilds SET lobby_vc=? WHERE guild_id=?", (results["Lobby VC"][1], ctx.guild.id))
+                if results["BeatKhana Page"][0] is True:
+                    self.bot.config[ctx.guild.id]["beatkhana_id"] = results["BeatKhana Page"][1]
+                    await dab.execute("UPDATE guilds SET beatkhana=? WHERE guild_id=?", (results["BeatKhana Page"][1], ctx.guild.id))
+                if results["Coordinator Roles"][0] is True:
+                    self.bot.config[ctx.guild.id]["coord_roles_ids"] = list()
+                    await dab.execute("DELETE FROM coord_roles WHERE guild_id=?", (ctx.guild.id,))
+                    for role in results["Coordinator Roles"][1]:
+                        self.bot.config[ctx.guild.id]["coord_roles_ids"].append(role)
+                        await dab.execute("INSERT INTO coord_roles (guild_id, role) VALUES (?,?)", (ctx.guild.id, role))
+                if results["Ignored Roles"][0] is True:
+                    self.bot.config[ctx.guild.id]["ignored_roles_ids"] = list()
+                    await dab.execute("DELETE FROM ignored_roles WHERE guild_id=?", (ctx.guild.id,))
+                    for role in results["Ignored Roles"][1]:
+                        self.bot.config[ctx.guild.id]["ignored_roles_ids"].append(role)
+                        await dab.execute("INSERT INTO ignored_roles (guild_id, role) VALUES (?,?)", (ctx.guild.id, role))
+                await dab.commit()
+            result_embed = Embed(
+                title="Results",
+                colour=Colour.light_grey()
+            )
+            for result in results:
+                result_embed.add_field(
+                    name=result,
+                    value=results[result][1],
+                    inline=False
+                )
+        await ctx.send(embed=result_embed)
+
+
     @config.command(help="Sets the bot's prefix for this guild")
     async def set_prefix(self, ctx, *, prefix):
         logging.info(f"Recieved set_prefix {prefix} in {ctx.guild.name}")
@@ -130,6 +214,7 @@ class Configuration(commands.Cog):
                 raise commands.BadArgument
         self.bot.config[ctx.guild.id]["coord_roles_ids"] = list()
         async with connect("database.db") as dab:
+            await dab.execute("DELETE FROM coord_roles WHERE guild_id=?", (ctx.guild.id,))
             for role in roles:
                 self.bot.config[ctx.guild.id]["coord_roles_ids"].append(role)
                 await dab.execute("INSERT INTO coord_roles (guild_id, role) VALUES (?,?)", (ctx.guild.id, role))
